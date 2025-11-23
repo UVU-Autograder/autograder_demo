@@ -172,9 +172,11 @@ export default function InstructorDashboard() {
                                 <Eye className="h-4 w-4" />
                               </Button>
                             </Link>
-                            <Button variant="ghost" size="icon" title="Edit">
-                              <FileEdit className="h-4 w-4" />
-                            </Button>
+                            <Link href={`/instructor/assignments/${assignment.id}/edit`}>
+                              <Button variant="ghost" size="icon" title="Edit">
+                                <FileEdit className="h-4 w-4" />
+                              </Button>
+                            </Link>
                             <Button 
                               variant="ghost" 
                               size="icon" 
