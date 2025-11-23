@@ -1,0 +1,255 @@
+[
+  {
+    "id": "fizzbuzz",
+    "title": "FizzBuzz",
+    "difficulty": "easy",
+    "language": "python",
+    "description": "Write a function that prints the numbers from 1 to n. For multiples of three print 'Fizz' instead of the number. For multiples of five print 'Buzz'. For numbers which are multiples of both three and five print 'FizzBuzz'.",
+    "instructions": "Implement the `fizzbuzz(n)` function that returns a list of strings representing the FizzBuzz sequence from 1 to n.",
+    "starterCode": "def fizzbuzz(n):\n    # Your code here\n    pass\n\n# Test your function\nif __name__ == '__main__':\n    import sys\n    n = int(input())\n    result = fizzbuzz(n)\n    for item in result:\n        print(item)",
+    "testCases": [
+      {
+        "id": 1,
+        "input": "15",
+        "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz",
+        "isHidden": false
+      },
+      {
+        "id": 2,
+        "input": "5",
+        "expectedOutput": "1\n2\nFizz\n4\nBuzz",
+        "isHidden": false
+      },
+      {
+        "id": 3,
+        "input": "20",
+        "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz\n16\n17\nFizz\n19\nBuzz",
+        "isHidden": true
+      }
+    ],
+    "rubric": {
+      "correctness": {
+        "points": 50,
+        "description": "Code produces correct output for all test cases"
+      },
+      "codeQuality": {
+        "points": 20,
+        "description": "Code is clean, readable, and follows Python conventions"
+      },
+      "efficiency": {
+        "points": 15,
+        "description": "Solution is efficient with O(n) time complexity"
+      },
+      "edgeCases": {
+        "points": 15,
+        "description": "Handles edge cases like n=0, n=1 properly"
+      }
+    }
+  },
+  {
+    "id": "two-sum",
+    "title": "Two Sum",
+    "difficulty": "easy",
+    "language": "python",
+    "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice.",
+    "instructions": "Implement the `two_sum(nums, target)` function that returns a list of two indices.",
+    "starterCode": "def two_sum(nums, target):\n    # Your code here\n    pass\n\n# Test your function\nif __name__ == '__main__':\n    import json\n    data = input()\n    parsed = json.loads(data)\n    nums = parsed['nums']\n    target = parsed['target']\n    result = two_sum(nums, target)\n    print(json.dumps(result))",
+    "testCases": [
+      {
+        "id": 1,
+        "input": "{\"nums\": [2, 7, 11, 15], \"target\": 9}",
+        "expectedOutput": "[0, 1]",
+        "isHidden": false
+      },
+      {
+        "id": 2,
+        "input": "{\"nums\": [3, 2, 4], \"target\": 6}",
+        "expectedOutput": "[1, 2]",
+        "isHidden": false
+      },
+      {
+        "id": 3,
+        "input": "{\"nums\": [3, 3], \"target\": 6}",
+        "expectedOutput": "[0, 1]",
+        "isHidden": true
+      },
+      {
+        "id": 4,
+        "input": "{\"nums\": [1, 5, 3, 7, 9, 2], \"target\": 10}",
+        "expectedOutput": "[1, 3]",
+        "isHidden": true
+      }
+    ],
+    "rubric": {
+      "correctness": {
+        "points": 50,
+        "description": "Returns correct indices for all test cases"
+      },
+      "codeQuality": {
+        "points": 20,
+        "description": "Clean implementation with good variable names"
+      },
+      "efficiency": {
+        "points": 20,
+        "description": "Uses optimal O(n) hash map solution"
+      },
+      "edgeCases": {
+        "points": 10,
+        "description": "Handles edge cases properly"
+      }
+    }
+  },
+  {
+    "id": "palindrome",
+    "title": "Valid Palindrome",
+    "difficulty": "easy",
+    "language": "python",
+    "description": "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.",
+    "instructions": "Implement the `is_palindrome(s)` function that returns True if the string is a palindrome, False otherwise.",
+    "starterCode": "def is_palindrome(s):\n    # Your code here\n    pass\n\n# Test your function\nif __name__ == '__main__':\n    s = input()\n    result = is_palindrome(s)\n    print(str(result))",
+    "testCases": [
+      {
+        "id": 1,
+        "input": "A man, a plan, a canal: Panama",
+        "expectedOutput": "True",
+        "isHidden": false
+      },
+      {
+        "id": 2,
+        "input": "race a car",
+        "expectedOutput": "False",
+        "isHidden": false
+      },
+      {
+        "id": 3,
+        "input": " ",
+        "expectedOutput": "True",
+        "isHidden": true
+      },
+      {
+        "id": 4,
+        "input": "ab_a",
+        "expectedOutput": "True",
+        "isHidden": true
+      }
+    ],
+    "rubric": {
+      "correctness": {
+        "points": 50,
+        "description": "Correctly identifies palindromes"
+      },
+      "codeQuality": {
+        "points": 25,
+        "description": "Clean and readable code"
+      },
+      "efficiency": {
+        "points": 15,
+        "description": "Efficient solution with O(n) time"
+      },
+      "edgeCases": {
+        "points": 10,
+        "description": "Handles empty strings and special characters"
+      }
+    }
+  },
+  {
+    "id": "reverse-string",
+    "title": "Reverse String",
+    "difficulty": "easy",
+    "language": "python",
+    "description": "Write a function that reverses a string. The input string is given as an array of characters.",
+    "instructions": "Implement the `reverse_string(s)` function that modifies the input list in-place and returns it.",
+    "starterCode": "def reverse_string(s):\n    # Your code here\n    pass\n\n# Test your function\nif __name__ == '__main__':\n    import json\n    s = json.loads(input())\n    result = reverse_string(s)\n    print(json.dumps(result))",
+    "testCases": [
+      {
+        "id": 1,
+        "input": "[\"h\", \"e\", \"l\", \"l\", \"o\"]",
+        "expectedOutput": "[\"o\", \"l\", \"l\", \"e\", \"h\"]",
+        "isHidden": false
+      },
+      {
+        "id": 2,
+        "input": "[\"H\", \"a\", \"n\", \"n\", \"a\", \"h\"]",
+        "expectedOutput": "[\"h\", \"a\", \"n\", \"n\", \"a\", \"H\"]",
+        "isHidden": false
+      },
+      {
+        "id": 3,
+        "input": "[\"A\"]",
+        "expectedOutput": "[\"A\"]",
+        "isHidden": true
+      }
+    ],
+    "rubric": {
+      "correctness": {
+        "points": 50,
+        "description": "Correctly reverses the string"
+      },
+      "codeQuality": {
+        "points": 25,
+        "description": "Clean implementation"
+      },
+      "efficiency": {
+        "points": 15,
+        "description": "In-place reversal with O(1) space"
+      },
+      "edgeCases": {
+        "points": 10,
+        "description": "Handles single character and empty arrays"
+      }
+    }
+  },
+  {
+    "id": "factorial",
+    "title": "Factorial",
+    "difficulty": "easy",
+    "language": "python",
+    "description": "Write a function to calculate the factorial of a non-negative integer n. The factorial of n (n!) is the product of all positive integers less than or equal to n.",
+    "instructions": "Implement the `factorial(n)` function that returns the factorial of n.",
+    "starterCode": "def factorial(n):\n    # Your code here\n    pass\n\n# Test your function\nif __name__ == '__main__':\n    n = int(input())\n    result = factorial(n)\n    print(result)",
+    "testCases": [
+      {
+        "id": 1,
+        "input": "5",
+        "expectedOutput": "120",
+        "isHidden": false
+      },
+      {
+        "id": 2,
+        "input": "0",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "id": 3,
+        "input": "10",
+        "expectedOutput": "3628800",
+        "isHidden": true
+      },
+      {
+        "id": 4,
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      }
+    ],
+    "rubric": {
+      "correctness": {
+        "points": 50,
+        "description": "Calculates factorial correctly"
+      },
+      "codeQuality": {
+        "points": 25,
+        "description": "Well-structured code"
+      },
+      "efficiency": {
+        "points": 15,
+        "description": "Efficient implementation"
+      },
+      "edgeCases": {
+        "points": 10,
+        "description": "Handles n=0 and n=1 correctly"
+      }
+    }
+  }
+]

@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  judge0-server:
+    image: judge0/judge0:1.13.1
+    container_name: judge0-server
+    restart: always
+    ports:
+      - "2358:2358"
+    environment:
+      - REDIS_HOST=judge0-redis
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=judge0-postgres
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=YourSecurePassword123
+      - JUDGE0_VERSION=1.13.1
+      - ENABLE_WAIT_RESULT=true
+      - MAX_QUEUE_SIZE=100
+    depends_on:
+      - judge0-postgres
+      - judge0-redis
+    privileged: true
+
+  judge0-postgres:
+    image: postgres:16-alpine
+    container_name: judge0-postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=YourSecurePassword123
+    volumes:
+      - judge0-postgres-data:/var/lib/postgresql/data
+
+  judge0-redis:
+    image: redis:7-alpine
+    container_name: judge0-redis
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - judge0-redis-data:/data
+
+volumes:
+  judge0-postgres-data:
+  judge0-redis-data:
