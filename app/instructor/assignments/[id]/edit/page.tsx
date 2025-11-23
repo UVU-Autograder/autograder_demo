@@ -116,9 +116,9 @@ export default function EditAssignment() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -130,7 +130,7 @@ export default function EditAssignment() {
               </Link>
               <div>
                 <h1 className="text-xl font-bold">Edit Assignment</h1>
-                <p className="text-sm text-muted-foreground">Modify existing assignment</p>
+                <p className="text-sm text-slate-600">Modify existing assignment</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -260,7 +260,7 @@ export default function EditAssignment() {
                       rows={8}
                       className="font-mono text-sm"
                     />
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-slate-600">
                       Provide a template or function signature for students to start with
                     </p>
                   </div>
@@ -292,7 +292,7 @@ export default function EditAssignment() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                   >
-                    <Card className="bg-muted/50">
+                    <Card className="bg-slate-100/50">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-sm">Test Case {index + 1}</CardTitle>
@@ -356,10 +356,10 @@ export default function EditAssignment() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {Object.entries(rubric).map(([key, value]) => (
-                  <div key={key} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                  <div key={key} className="flex items-center justify-between p-3 bg-slate-100 rounded-lg">
                     <div className="flex-1">
                       <p className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</p>
-                      <p className="text-xs text-muted-foreground">{value.description}</p>
+                      <p className="text-xs text-slate-600">{value.description}</p>
                     </div>
                     <Input
                       type="number"

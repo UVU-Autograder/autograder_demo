@@ -78,8 +78,8 @@ export default function NewAssignment() {
   const totalPoints = Object.values(rubric).reduce((sum, r) => sum + r.points, 0);
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="min-h-screen bg-white">
+      <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <motion.div 
@@ -96,7 +96,7 @@ export default function NewAssignment() {
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Create New Assignment
                 </h1>
-                <p className="text-sm text-muted-foreground">Design a new coding challenge</p>
+                <p className="text-sm text-slate-600">Design a new coding challenge</p>
               </div>
             </motion.div>
             <motion.div
@@ -136,7 +136,7 @@ export default function NewAssignment() {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g., Fibonacci Sequence"
-                    className="w-full px-4 py-2 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -146,7 +146,7 @@ export default function NewAssignment() {
                     <select
                       value={difficulty}
                       onChange={(e) => setDifficulty(e.target.value as "easy" | "medium" | "hard")}
-                      className="w-full px-4 py-2 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="easy">Easy</option>
                       <option value="medium">Medium</option>
@@ -159,7 +159,7 @@ export default function NewAssignment() {
                     <select
                       value={language}
                       onChange={(e) => setLanguage(e.target.value)}
-                      className="w-full px-4 py-2 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       {Object.entries(SUPPORTED_LANGUAGES).map(([key, lang]) => (
                         <option key={key} value={key}>
@@ -177,7 +177,7 @@ export default function NewAssignment() {
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Provide a brief description of the problem..."
                     rows={4}
-                    className="w-full px-4 py-2 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   />
                 </div>
               </CardContent>
@@ -196,7 +196,7 @@ export default function NewAssignment() {
                   onChange={(e) => setInstructions(e.target.value)}
                   placeholder="Write detailed instructions here..."
                   rows={10}
-                  className="w-full px-4 py-2 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+                  className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
                 />
               </CardContent>
             </Card>
@@ -212,7 +212,7 @@ export default function NewAssignment() {
                   onChange={(e) => setStarterCode(e.target.value)}
                   placeholder="def fibonacci(n):\n    # Write your code here\n    pass"
                   rows={10}
-                  className="w-full px-4 py-2 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+                  className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
                 />
               </CardContent>
             </Card>
@@ -243,7 +243,7 @@ export default function NewAssignment() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="font-medium">Test Case {index + 1}</span>
-                        <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <label className="flex items-center gap-2 text-sm text-slate-600">
                           <input
                             type="checkbox"
                             checked={testCase.hidden}
@@ -272,7 +272,7 @@ export default function NewAssignment() {
                           onChange={(e) => updateTestCase(index, "input", e.target.value)}
                           placeholder="5"
                           rows={3}
-                          className="w-full px-3 py-2 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+                          className="w-full px-3 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
                         />
                       </div>
                       <div className="space-y-2">
@@ -282,7 +282,7 @@ export default function NewAssignment() {
                           onChange={(e) => updateTestCase(index, "expectedOutput", e.target.value)}
                           placeholder="5"
                           rows={3}
-                          className="w-full px-3 py-2 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+                          className="w-full px-3 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
                         />
                       </div>
                     </div>
@@ -310,7 +310,7 @@ export default function NewAssignment() {
                       <p className="font-medium capitalize">
                         {key.replace(/([A-Z])/g, " $1").trim()}
                       </p>
-                      <p className="text-sm text-muted-foreground">{value.description}</p>
+                      <p className="text-sm text-slate-600">{value.description}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <input
@@ -319,9 +319,9 @@ export default function NewAssignment() {
                         onChange={(e) => updateRubricPoints(key, parseInt(e.target.value) || 0)}
                         min="0"
                         max="100"
-                        className="w-20 px-3 py-1 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+                        className="w-20 px-3 py-1 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                       />
-                      <span className="text-sm text-muted-foreground">pts</span>
+                      <span className="text-sm text-slate-600">pts</span>
                     </div>
                   </div>
                 ))}

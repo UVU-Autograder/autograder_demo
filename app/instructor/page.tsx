@@ -182,7 +182,7 @@ export default function InstructorDashboard() {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-6 text-sm text-slate-600">
                           <div className="flex items-center gap-2">
                             <Code2 className="h-4 w-4" />
                             <span>{assignment.testCases.length} test cases</span>
@@ -222,8 +222,8 @@ export default function InstructorDashboard() {
                 <CardDescription>Configure AI model and feedback preferences</CardDescription>
               </CardHeader>
               <CardContent className="text-center py-12">
-                <Settings className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground">This feature is under development</p>
+                <Settings className="h-16 w-16 mx-auto mb-4 text-slate-600" />
+                <p className="text-slate-600">This feature is under development</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -235,8 +235,8 @@ export default function InstructorDashboard() {
                 <CardDescription>View submission statistics and performance metrics</CardDescription>
               </CardHeader>
               <CardContent className="text-center py-12">
-                <BarChart3 className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground">This feature is under development</p>
+                <BarChart3 className="h-16 w-16 mx-auto mb-4 text-slate-600" />
+                <p className="text-slate-600">This feature is under development</p>
               </CardContent>
             </Card>
           </TabsContent>
