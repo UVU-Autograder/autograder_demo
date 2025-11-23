@@ -6,7 +6,6 @@ import { Code2, BookOpen, Award, Sparkles, Zap, Target, Users } from "lucide-rea
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { getAssignments } from "@/lib/assignments";
 import { DIFFICULTY_LEVELS } from "@/lib/constants";
 
@@ -29,9 +28,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 border-b bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <motion.div 
@@ -43,8 +42,8 @@ export default function Home() {
                 <Code2 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">UVU Autograder</h1>
-                <p className="text-sm text-muted-foreground">AI-Powered Code Evaluation</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">UVU Autograder</h1>
+                <p className="text-sm text-slate-600">AI-Powered Code Evaluation</p>
               </div>
             </motion.div>
             <motion.div
@@ -64,7 +63,6 @@ export default function Home() {
                   Bulk Grade
                 </Button>
               </Link>
-              <ThemeToggle />
             </motion.div>
           </div>
         </div>
@@ -78,28 +76,28 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-3xl mx-auto mb-12"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
-            <Sparkles className="h-4 w-4 text-blue-400" />
-            <span className="text-sm text-blue-400 font-medium">AI-Powered Evaluation</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 mb-6">
+            <Sparkles className="h-4 w-4 text-blue-600" />
+            <span className="text-sm text-blue-600 font-medium">AI-Powered Evaluation</span>
           </div>
-          <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+          <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
             Master Coding with Instant Feedback
           </h2>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-xl text-slate-600 mb-8">
             Practice coding problems and receive detailed AI-powered feedback on correctness, code quality, and efficiency
           </p>
           <div className="flex items-center justify-center gap-8 text-sm">
             <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-yellow-400" />
-              <span className="text-muted-foreground">Instant Execution</span>
+              <Zap className="h-5 w-5 text-yellow-500" />
+              <span className="text-slate-600">Instant Execution</span>
             </div>
             <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-green-400" />
-              <span className="text-muted-foreground">Smart Rubrics</span>
+              <Target className="h-5 w-5 text-green-500" />
+              <span className="text-slate-600">Smart Rubrics</span>
             </div>
             <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-purple-400" />
-              <span className="text-muted-foreground">AI Feedback</span>
+              <Sparkles className="h-5 w-5 text-purple-500" />
+              <span className="text-slate-600">AI Feedback</span>
             </div>
           </div>
         </motion.div>

@@ -147,9 +147,9 @@ export default function BulkGradingPage() {
   const failedCount = submissions.filter(s => s.status === 'failed').length;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="border-b bg-card px-6 py-4">
+      <header className="border-b bg-white px-6 py-4 shadow-sm">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/">
@@ -160,7 +160,7 @@ export default function BulkGradingPage() {
             </Link>
             <div>
               <h1 className="text-2xl font-bold">Bulk Grading</h1>
-              <p className="text-sm text-muted-foreground">Upload CSV file with student submissions</p>
+              <p className="text-sm text-slate-600">Upload CSV file with student submissions</p>
             </div>
           </div>
         </div>
@@ -179,10 +179,10 @@ export default function BulkGradingPage() {
           <CardContent>
             <div className="flex items-center gap-4">
               <label className="flex-1">
-                <div className="flex h-32 w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-muted hover:border-muted-foreground/50 transition-colors">
+                <div className="flex h-32 w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 hover:border-slate-400 transition-colors bg-slate-50">
                   <div className="text-center">
-                    <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
-                    <p className="mt-2 text-sm text-muted-foreground">
+                    <Upload className="mx-auto h-8 w-8 text-slate-400" />
+                    <p className="mt-2 text-sm text-slate-600">
                       {file ? file.name : 'Click to upload CSV file'}
                     </p>
                   </div>
@@ -198,7 +198,7 @@ export default function BulkGradingPage() {
 
             {submissions.length > 0 && (
               <div className="mt-4 flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-600">
                   {submissions.length} submission{submissions.length !== 1 ? 's' : ''} loaded
                 </p>
                 <div className="flex gap-2">
@@ -237,9 +237,9 @@ export default function BulkGradingPage() {
                   <span>Processing submissions...</span>
                   <span>{Math.round(progress)}%</span>
                 </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
                   <div
-                    className="h-full bg-blue-500 transition-all duration-300"
+                    className="h-full bg-blue-600 transition-all duration-300"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -255,23 +255,23 @@ export default function BulkGradingPage() {
               <CardContent className="pt-6">
                 <div className="text-center">
                   <p className="text-2xl font-bold">{submissions.length}</p>
-                  <p className="text-sm text-muted-foreground">Total</p>
+                  <p className="text-sm text-slate-600">Total</p>
                 </div>
               </CardContent>
             </Card>
-            <Card className="border-green-500/30 bg-green-500/10">
+            <Card className="border-green-200 bg-green-50">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-green-400">{completedCount}</p>
-                  <p className="text-sm text-green-400/90">Completed</p>
+                  <p className="text-2xl font-bold text-green-600">{completedCount}</p>
+                  <p className="text-sm text-green-700">Completed</p>
                 </div>
               </CardContent>
             </Card>
-            <Card className="border-red-500/30 bg-red-500/10">
+            <Card className="border-red-200 bg-red-50">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-red-400">{failedCount}</p>
-                  <p className="text-sm text-red-400/90">Failed</p>
+                  <p className="text-2xl font-bold text-red-600">{failedCount}</p>
+                  <p className="text-sm text-red-700">Failed</p>
                 </div>
               </CardContent>
             </Card>
@@ -299,19 +299,19 @@ export default function BulkGradingPage() {
                   </thead>
                   <tbody>
                     {submissions.map((submission, idx) => (
-                      <tr key={idx} className="border-b hover:bg-muted/50 transition-colors">
+                      <tr key={idx} className="border-b hover:bg-slate-50 transition-colors">
                         <td className="px-4 py-3">
                           {submission.status === 'completed' && (
-                            <CheckCircle2 className="h-5 w-5 text-green-400" />
+                            <CheckCircle2 className="h-5 w-5 text-green-600" />
                           )}
                           {submission.status === 'failed' && (
-                            <XCircle className="h-5 w-5 text-red-400" />
+                            <XCircle className="h-5 w-5 text-red-600" />
                           )}
                           {submission.status === 'processing' && (
-                            <Loader2 className="h-5 w-5 animate-spin text-blue-400" />
+                            <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
                           )}
                           {submission.status === 'pending' && (
-                            <div className="h-5 w-5 rounded-full border-2 border-muted" />
+                            <div className="h-5 w-5 rounded-full border-2 border-slate-300" />
                           )}
                         </td>
                         <td className="px-4 py-3 text-sm">{submission.studentName}</td>
@@ -334,11 +334,11 @@ export default function BulkGradingPage() {
                         </td>
                         <td className="px-4 py-3 text-sm">
                           {submission.result ? (
-                            <p className="max-w-md truncate text-muted-foreground">
+                            <p className="max-w-md truncate text-slate-600">
                               {submission.result.aiEvaluation.feedback}
                             </p>
                           ) : submission.error ? (
-                            <p className="text-red-400">{submission.error}</p>
+                            <p className="text-red-600">{submission.error}</p>
                           ) : (
                             '-'
                           )}

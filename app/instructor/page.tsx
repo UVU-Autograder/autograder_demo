@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { getAssignments } from "@/lib/assignments";
 import { DIFFICULTY_LEVELS } from "@/lib/constants";
 import { toast } from "sonner";
@@ -53,9 +52,9 @@ export default function InstructorDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 border-b bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <motion.div 
@@ -72,17 +71,11 @@ export default function InstructorDashboard() {
                 <Settings className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Instructor Dashboard
                 </h1>
-                <p className="text-sm text-muted-foreground">Manage assignments and settings</p>
+                <p className="text-sm text-slate-600">Manage assignments and settings</p>
               </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
-              <ThemeToggle />
             </motion.div>
           </div>
         </div>
@@ -107,7 +100,7 @@ export default function InstructorDashboard() {
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">{stat.title}</p>
+                      <p className="text-sm text-slate-600 mb-1">{stat.title}</p>
                       <p className="text-3xl font-bold">{stat.value}</p>
                     </div>
                     <div className={`rounded-lg bg-gradient-to-br ${stat.gradient} p-3 shadow-lg ${stat.shadow}`}>
@@ -133,7 +126,7 @@ export default function InstructorDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold">Assignments</h2>
-                <p className="text-muted-foreground">Manage your course assignments</p>
+                <p className="text-slate-600">Manage your course assignments</p>
               </div>
               <Link href="/instructor/assignments/new">
                 <Button className="gap-2">
@@ -216,8 +209,8 @@ export default function InstructorDashboard() {
                 <CardDescription>Advanced test case configuration coming soon</CardDescription>
               </CardHeader>
               <CardContent className="text-center py-12">
-                <Code2 className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground">This feature is under development</p>
+                <Code2 className="h-16 w-16 mx-auto mb-4 text-slate-400" />
+                <p className="text-slate-600">This feature is under development</p>
               </CardContent>
             </Card>
           </TabsContent>
