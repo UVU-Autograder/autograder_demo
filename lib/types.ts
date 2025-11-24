@@ -32,6 +32,34 @@ export type EvaluationMethod =
   | { type: 'pattern-match'; required?: string[]; forbidden?: string[] }
   | { type: 'custom'; script: string };
 
+// Code analysis requirements
+export interface CodeRequirements {
+  // Construct requirements
+  minFunctions?: number;
+  minClasses?: number;
+  minLoops?: number;
+  minLines?: number;
+  maxLines?: number;
+  
+  // Required constructs (must be present)
+  requiredConstructs?: string[]; // e.g., ['if_statement', 'for_loop', 'recursion']
+  
+  // Forbidden constructs (must not be present)
+  forbiddenConstructs?: string[]; // e.g., ['while_loop', 'global_variables']
+  
+  // Naming convention
+  namingConvention?: 'snake_case' | 'camelCase';
+  
+  // Style requirements
+  requireDocstrings?: boolean;
+  requireTypeHints?: boolean;
+  requireComments?: boolean;
+  
+  // Output formatting
+  requireFString?: boolean;
+  requireInputPrompt?: boolean;
+}
+
 export interface Assignment {
   id: string;
   title: string;
@@ -44,6 +72,7 @@ export interface Assignment {
   rubric: Rubric;
   // New fields for enhanced functionality
   evaluationMethod?: EvaluationMethod;
+  codeRequirements?: CodeRequirements;
   timeLimit?: number; // seconds, default 5
   memoryLimit?: number; // KB, default 256000
   dueDate?: string;

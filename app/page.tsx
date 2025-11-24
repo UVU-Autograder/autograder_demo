@@ -55,7 +55,7 @@ export default function Home() {
             <span className="text-sm text-blue-600 font-medium">AI-Powered Code Grading</span>
           </div>
           <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
-            Grade 100 Assignments in 10 Minutes
+            Fast, Fair, and Scalable Grading for Every Class
           </h2>
           <p className="text-xl text-slate-600 mb-4">
             Intelligent autograding with rubric-based AI feedback. Focus on teaching while we handle the grading.
