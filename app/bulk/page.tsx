@@ -3,14 +3,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Papa from 'papaparse';
-import { ArrowLeft, Upload, Download, Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft, Upload, Download, Loader2, CheckCircle2, XCircle, FileArchive, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import type { GradingResult } from '@/lib/types';
+import { submissionService } from '@/lib/services/submission.service';
+import type { GradingResult, Submission } from '@/lib/types';
 
 interface BulkSubmission {
-  studentName: string;
+  studentId: string;
+  studentName?: string;
+  fileName: string;
   assignmentId: string;
   code: string;
 }
@@ -23,25 +26,86 @@ interface BulkResult extends BulkSubmission {
 
 export default function BulkGradingPage() {
   const [file, setFile] = useState<File | null>(null);
+  const [fileType, setFileType] = useState<'csv' | 'zip' | null>(null);
+  const [assignmentId, setAssignmentId] = useState<string>('');
   const [submissions, setSubmissions] = useState<BulkResult[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isParsing, setIsParsing] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
-    if (uploadedFile) {
+    if (!uploadedFile) return;
+
+    const fileName = uploadedFile.name.toLowerCase();
+    
+    if (fileName.endsWith('.csv')) {
       setFile(uploadedFile);
+      setFileType('csv');
       parseCSV(uploadedFile);
+    } else if (fileName.endsWith('.zip')) {
+      if (!assignmentId.trim()) {
+        toast.error('Please enter an Assignment ID before uploading ZIP file');
+        event.target.value = ''; // Reset file input
+        return;
+      }
+      setFile(uploadedFile);
+      setFileType('zip');
+      await parseZIP(uploadedFile);
+    } else {
+      toast.error('Please upload a CSV or ZIP file');
+      event.target.value = '';
+    }
+  };
+
+  const parseZIP = async (file: File) => {
+    setIsParsing(true);
+    toast.info('Extracting submissions from ZIP file...');
+
+    try {
+      // For now, assume Python files. In production, get language from assignment
+      const result = await submissionService.parseZipFile(file, assignmentId.trim(), 'python');
+      
+      const bulkResults: BulkResult[] = result.submissions.map((submission) => ({
+        studentId: submission.studentId,
+        studentName: submission.studentId,
+        fileName: submission.filename,
+        assignmentId: submission.assignmentId,
+        code: submission.code,
+        status: 'pending' as const,
+      }));
+
+      setSubmissions(bulkResults);
+      
+      if (result.failed > 0) {
+        toast.warning(
+          `Loaded ${result.successful} of ${result.total} submissions. ${result.failed} failed (check console for details).`
+        );
+        console.error('ZIP parsing errors:', result.errors);
+      } else {
+        toast.success(`Successfully loaded ${result.successful} submissions from ZIP`);
+      }
+    } catch (error) {
+      console.error('ZIP parse error:', error);
+      toast.error('Failed to parse ZIP file. Please check the format.');
+      setFile(null);
+      setFileType(null);
+    } finally {
+      setIsParsing(false);
     }
   };
 
   const parseCSV = (file: File) => {
-    Papa.parse<BulkSubmission>(file, {
+    Papa.parse<{ studentName?: string; studentId?: string; assignmentId: string; code: string }>(file, {
       header: true,
       skipEmptyLines: true,
       complete: (results) => {
         const bulkResults: BulkResult[] = results.data.map((row) => ({
-          ...row,
+          studentId: row.studentId || row.studentName || 'unknown',
+          studentName: row.studentName || row.studentId,
+          fileName: 'from-csv',
+          assignmentId: row.assignmentId,
+          code: row.code,
           status: 'pending' as const,
         }));
         setSubmissions(bulkResults);
@@ -122,7 +186,9 @@ export default function BulkGradingPage() {
     const csvData = submissions
       .filter(s => s.status === 'completed' && s.result)
       .map(s => ({
-        'Student Name': s.studentName,
+        'Student ID': s.studentId,
+        'Student Name': s.studentName || s.studentId,
+        'File Name': s.fileName,
         'Assignment ID': s.assignmentId,
         'Score': `${s.result!.finalScore}/${s.result!.maxScore}`,
         'Tests Passed': `${s.result!.passedCount}/${s.result!.totalCount}`,
@@ -173,24 +239,70 @@ export default function BulkGradingPage() {
           <CardHeader>
             <CardTitle>Upload Submissions</CardTitle>
             <CardDescription>
-              CSV file should have columns: studentName, assignmentId, code
+              Upload CSV file with student data or ZIP file with student code submissions
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            {/* Assignment ID input for ZIP uploads */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Assignment ID {fileType === 'zip' && <span className="text-red-600">*</span>}
+              </label>
+              <input
+                type="text"
+                value={assignmentId}
+                onChange={(e) => setAssignmentId(e.target.value)}
+                placeholder="e.g., fizzbuzz, two-sum, recursion-lab"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={isParsing || isProcessing}
+              />
+              <p className="mt-1 text-xs text-slate-500">
+                Required for ZIP uploads. For CSV, this can be left empty if your CSV has assignmentId column.
+              </p>
+            </div>
+
+            {/* File upload area */}
             <div className="flex items-center gap-4">
               <label className="flex-1">
-                <div className="flex h-32 w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 hover:border-slate-400 transition-colors bg-slate-50">
+                <div className={`flex h-32 w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed transition-colors ${
+                  isParsing 
+                    ? 'border-blue-400 bg-blue-50' 
+                    : 'border-slate-300 hover:border-slate-400 bg-slate-50'
+                }`}>
                   <div className="text-center">
-                    <Upload className="mx-auto h-8 w-8 text-slate-400" />
-                    <p className="mt-2 text-sm text-slate-600">
-                      {file ? file.name : 'Click to upload CSV file'}
-                    </p>
+                    {isParsing ? (
+                      <>
+                        <Loader2 className="mx-auto h-8 w-8 text-blue-600 animate-spin" />
+                        <p className="mt-2 text-sm text-blue-600">Parsing file...</p>
+                      </>
+                    ) : file ? (
+                      <>
+                        {fileType === 'zip' ? (
+                          <FileArchive className="mx-auto h-8 w-8 text-slate-600" />
+                        ) : (
+                          <File className="mx-auto h-8 w-8 text-slate-600" />
+                        )}
+                        <p className="mt-2 text-sm font-medium text-slate-700">{file.name}</p>
+                        <p className="text-xs text-slate-500">Click to change file</p>
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="mx-auto h-8 w-8 text-slate-400" />
+                        <p className="mt-2 text-sm text-slate-600">
+                          Click to upload CSV or ZIP file
+                        </p>
+                        <p className="mt-1 text-xs text-slate-500">
+                          CSV: studentId, assignmentId, code | ZIP: studentid_file.py
+                        </p>
+                      </>
+                    )}
                   </div>
                   <input
                     type="file"
-                    accept=".csv"
+                    accept=".csv,.zip"
                     onChange={handleFileUpload}
                     className="hidden"
+                    disabled={isParsing || isProcessing}
                   />
                 </div>
               </label>
@@ -290,7 +402,8 @@ export default function BulkGradingPage() {
                   <thead>
                     <tr className="border-b">
                       <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold">Student</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold">Student ID</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold">File Name</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Assignment</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Score</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Tests Passed</th>
@@ -314,7 +427,10 @@ export default function BulkGradingPage() {
                             <div className="h-5 w-5 rounded-full border-2 border-slate-300" />
                           )}
                         </td>
-                        <td className="px-4 py-3 text-sm">{submission.studentName}</td>
+                        <td className="px-4 py-3 text-sm font-mono">{submission.studentId}</td>
+                        <td className="px-4 py-3 text-sm text-slate-600 max-w-xs truncate" title={submission.fileName}>
+                          {submission.fileName}
+                        </td>
                         <td className="px-4 py-3 text-sm font-mono">{submission.assignmentId}</td>
                         <td className="px-4 py-3 text-sm">
                           {submission.result ? (
@@ -352,17 +468,22 @@ export default function BulkGradingPage() {
           </Card>
         )}
 
-        {/* CSV Format Help */}
+        {/* Format Help */}
         {submissions.length === 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>CSV Format Example</CardTitle>
-              <CardDescription>Your CSV file should follow this format:</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <pre className="rounded-lg bg-slate-950 border p-4 text-sm text-slate-50 overflow-x-auto font-mono">
-{`studentName,assignmentId,code
-John Doe,fizzbuzz,"def fizzbuzz(n):
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* CSV Format */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <File className="h-5 w-5" />
+                  CSV Format Example
+                </CardTitle>
+                <CardDescription>Upload CSV with student data and code</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <pre className="rounded-lg bg-slate-950 border p-4 text-xs text-slate-50 overflow-x-auto font-mono">
+{`studentId,assignmentId,code
+u1234567,fizzbuzz,"def fizzbuzz(n):
     result = []
     for i in range(1, n + 1):
         if i % 15 == 0:
@@ -373,34 +494,47 @@ John Doe,fizzbuzz,"def fizzbuzz(n):
             result.append('Buzz')
         else:
             result.append(str(i))
-    return result
+    return result"
+u7654321,fizzbuzz,"def fizzbuzz(n):
+    return ['FizzBuzz' if i%15==0 else 'Fizz' if i%3==0 else 'Buzz' if i%5==0 else str(i) for i in range(1,n+1)]"`}
+                </pre>
+                <p className="mt-3 text-xs text-slate-600">
+                  <strong>Required columns:</strong> studentId (or studentName), assignmentId, code
+                </p>
+              </CardContent>
+            </Card>
 
-if __name__ == '__main__':
-    import sys
-    n = int(input())
-    result = fizzbuzz(n)
-    for item in result:
-        print(item)"
-Jane Smith,two-sum,"def two_sum(nums, target):
-    seen = {}
-    for i, num in enumerate(nums):
-        diff = target - num
-        if diff in seen:
-            return [seen[diff], i]
-        seen[num] = i
-    return []
-
-if __name__ == '__main__':
-    import json
-    data = input()
-    parsed = json.loads(data)
-    nums = parsed['nums']
-    target = parsed['target']
-    result = two_sum(nums, target)
-    print(json.dumps(result))"`}
-              </pre>
-            </CardContent>
-          </Card>
+            {/* ZIP Format */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileArchive className="h-5 w-5" />
+                  ZIP Format Example
+                </CardTitle>
+                <CardDescription>Upload ZIP with individual student files</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="rounded-lg bg-slate-950 border p-4 font-mono text-xs text-slate-50">
+                    <div className="text-blue-400">submissions.zip/</div>
+                    <div className="ml-4">├── u1234567_fizzbuzz.py</div>
+                    <div className="ml-4">├── u7654321_fizzbuzz.py</div>
+                    <div className="ml-4">├── u9999999_fizzbuzz.py</div>
+                    <div className="ml-4">└── u1111111_fizzbuzz.py</div>
+                  </div>
+                  <div className="text-xs text-slate-600 space-y-1">
+                    <p><strong>Filename patterns:</strong></p>
+                    <ul className="list-disc list-inside ml-2 space-y-1">
+                      <li><code className="bg-slate-100 px-1 rounded">studentid_assignment.py</code> - Recommended</li>
+                      <li><code className="bg-slate-100 px-1 rounded">studentid.py</code> - Student ID only</li>
+                      <li><code className="bg-slate-100 px-1 rounded">assignment_studentid.py</code> - Reversed</li>
+                    </ul>
+                    <p className="mt-2"><strong>Note:</strong> Enter Assignment ID above before uploading ZIP</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
       </main>
     </div>
