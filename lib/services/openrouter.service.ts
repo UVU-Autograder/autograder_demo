@@ -14,6 +14,12 @@ export interface AIEvaluationRequest {
     failures: string[];
   };
   rubric: Record<string, { points: number; description: string }>;
+  codeAnalysis?: {
+    passed: boolean;
+    score: number;
+    totalChecks: number;
+    failures: string[];
+  };
 }
 
 export interface AIEvaluationResponse {
@@ -78,7 +84,7 @@ export class OpenRouterService {
   }
 
   private buildPrompt(request: AIEvaluationRequest): string {
-    const { code, language, assignmentTitle, assignmentDescription, testResults, rubric } = request;
+    const { code, language, assignmentTitle, assignmentDescription, testResults, rubric, codeAnalysis } = request;
 
     return `You are evaluating a student's code submission for a programming assignment.
 
@@ -96,15 +102,23 @@ ${code}
 - Tests Passed: ${testResults.passed}/${testResults.total}
 ${testResults.failures.length > 0 ? `- Failed Tests:\n${testResults.failures.map(f => `  * ${f}`).join('\n')}` : ''}
 
+${codeAnalysis ? `**Code Requirements Analysis:**
+- Requirements Met: ${codeAnalysis.score}/${codeAnalysis.totalChecks}
+- Overall: ${codeAnalysis.passed ? '✅ PASSED' : '❌ FAILED'}
+${codeAnalysis.failures.length > 0 ? `- Failed Requirements:\n${codeAnalysis.failures.map(f => `  * ${f}`).join('\n')}` : ''}
+` : ''}
+
 **Grading Rubric:**
 ${Object.entries(rubric).map(([key, val]) => `- ${key}: ${val.points} points - ${val.description}`).join('\n')}
 
 **Instructions:**
-Evaluate the code based on the rubric criteria and provide:
+Evaluate the code based on the rubric criteria${codeAnalysis ? ' and the code requirements analysis' : ''}. Provide:
 1. Detailed feedback on the code quality, correctness, and efficiency
 2. Scores for each rubric criterion (0 to max points)
-3. Specific suggestions for improvement
+3. Specific suggestions for improvement${codeAnalysis && !codeAnalysis.passed ? ' (including failed requirements)' : ''}
 4. Strengths of the current implementation
+
+${codeAnalysis && !codeAnalysis.passed ? 'NOTE: The code failed some required constructs/patterns. Consider this in your evaluation.\n' : ''}
 
 Return your evaluation in the following JSON format:
 {

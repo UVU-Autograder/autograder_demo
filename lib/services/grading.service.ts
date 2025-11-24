@@ -1,13 +1,23 @@
 import { codeExecutionService } from './code-execution.factory';
 import { openRouterService } from './openrouter.service';
-import type { Assignment, TestResult, GradingResult } from '../types';
+import { codeAnalysisService } from './code-analysis.service';
+import type { Assignment, TestResult, GradingResult, CodeRequirements } from '../types';
 
 export class GradingService {
   async gradeSubmission(
     assignment: Assignment,
     code: string
   ): Promise<GradingResult> {
-    // Step 1: Run all test cases
+    // Step 1: Check code requirements (if specified)
+    let codeAnalysisResult = null;
+    if (assignment.codeRequirements && assignment.language.toLowerCase() === 'python') {
+      codeAnalysisResult = codeAnalysisService.validateRequirements(
+        code,
+        assignment.codeRequirements
+      );
+    }
+
+    // Step 2: Run all test cases
     const testResults = await this.runTestCases(assignment, code);
 
     // Calculate test score
@@ -15,7 +25,7 @@ export class GradingService {
     const totalCount = testResults.length;
     const testPassRate = passedCount / totalCount;
 
-    // Step 2: Get AI evaluation
+    // Step 3: Get AI evaluation with code analysis context
     const aiEvaluation = await openRouterService.evaluateCode({
       code,
       language: assignment.language,
@@ -29,17 +39,29 @@ export class GradingService {
           .map((t) => `Test ${t.testCaseId}: Expected "${t.expectedOutput}" but got "${t.actualOutput}"`),
       },
       rubric: assignment.rubric,
+      codeAnalysis: codeAnalysisResult ? {
+        passed: codeAnalysisResult.passed,
+        score: codeAnalysisResult.score,
+        totalChecks: codeAnalysisResult.totalChecks,
+        failures: codeAnalysisResult.checks
+          .filter((c) => !c.passed)
+          .map((c) => c.message),
+      } : undefined,
     });
 
-    // Step 3: Calculate final score
-    // Test score is weighted from AI rubric correctness score
+    // Step 4: Calculate final score
+    // If code requirements failed critical checks, cap the score
+    const requirementsPenalty = codeAnalysisResult && !codeAnalysisResult.passed ? 0.7 : 1.0;
+    
     const testScore = aiEvaluation.rubricScores.correctness;
     
-    const finalScore =
+    const baseScore =
       aiEvaluation.rubricScores.correctness +
       aiEvaluation.rubricScores.codeQuality +
       aiEvaluation.rubricScores.efficiency +
       aiEvaluation.rubricScores.edgeCases;
+
+    const finalScore = Math.round(baseScore * requirementsPenalty);
 
     const maxScore =
       assignment.rubric.correctness.points +
@@ -54,8 +76,25 @@ export class GradingService {
       passedCount,
       totalCount,
       testScore,
-      aiEvaluation,
-      finalScore: Math.round(finalScore),
+      aiEvaluation: {
+        ...aiEvaluation,
+        // Add code analysis feedback to suggestions
+        suggestions: [
+          ...aiEvaluation.suggestions,
+          ...(codeAnalysisResult?.checks
+            .filter((c) => !c.passed)
+            .map((c) => c.message) || []),
+        ],
+        // Add code analysis passed checks to strengths
+        strengths: [
+          ...aiEvaluation.strengths,
+          ...(codeAnalysisResult?.checks
+            .filter((c) => c.passed)
+            .slice(0, 3) // Only include top 3
+            .map((c) => c.message.replace('✓ ', '')) || []),
+        ],
+      },
+      finalScore,
       maxScore,
       gradedAt: new Date(),
     };
