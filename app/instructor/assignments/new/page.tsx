@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { toast } from "sonner";
 import { SUPPORTED_LANGUAGES, DEFAULT_RUBRIC } from "@/lib/constants";
+import { CodeRequirementsEditor } from "@/components/code-requirements-editor";
+import { CodeRequirements } from "@/lib/types";
 
 export default function NewAssignment() {
   const router = useRouter();
@@ -28,6 +29,7 @@ export default function NewAssignment() {
     { input: "", expectedOutput: "", hidden: false },
   ]);
   const [rubric, setRubric] = useState(DEFAULT_RUBRIC);
+  const [codeRequirements, setCodeRequirements] = useState<CodeRequirements>({});
 
   const addTestCase = () => {
     setTestCases([...testCases, { input: "", expectedOutput: "", hidden: false }]);
@@ -108,7 +110,6 @@ export default function NewAssignment() {
                 <Save className="h-4 w-4" />
                 Save Assignment
               </Button>
-              <ThemeToggle />
             </motion.div>
           </div>
         </div>
@@ -116,10 +117,11 @@ export default function NewAssignment() {
 
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full max-w-2xl grid-cols-3">
+          <TabsList className="grid w-full max-w-3xl grid-cols-4">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="code">Code & Instructions</TabsTrigger>
-            <TabsTrigger value="testing">Testing</TabsTrigger>
+            <TabsTrigger value="requirements">Code Requirements</TabsTrigger>
+            <TabsTrigger value="testing">Testing & Rubric</TabsTrigger>
           </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
@@ -213,6 +215,26 @@ export default function NewAssignment() {
                   placeholder="def fibonacci(n):\n    # Write your code here\n    pass"
                   rows={10}
                   className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Code Requirements Tab */}
+          <TabsContent value="requirements" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Code Analysis Requirements</CardTitle>
+                <CardDescription>
+                  Define what constructs, patterns, and style rules the code must follow.
+                  These requirements will be automatically checked during grading.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CodeRequirementsEditor
+                  requirements={codeRequirements}
+                  onChange={setCodeRequirements}
+                  language={language}
                 />
               </CardContent>
             </Card>
