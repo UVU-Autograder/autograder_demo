@@ -481,7 +481,7 @@ export default function BulkGradingPage() {
                 <CardDescription>Upload CSV with student data and code</CardDescription>
               </CardHeader>
               <CardContent>
-                <pre className="rounded-lg bg-slate-950 border p-4 text-xs text-slate-50 overflow-x-auto font-mono">
+                <pre className="rounded-lg bg-slate-50 border border-slate-200 p-4 text-xs text-slate-900 overflow-x-auto font-mono">
 {`studentId,assignmentId,code
 u1234567,fizzbuzz,"def fizzbuzz(n):
     result = []
@@ -515,8 +515,8 @@ u7654321,fizzbuzz,"def fizzbuzz(n):
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="rounded-lg bg-slate-950 border p-4 font-mono text-xs text-slate-50">
-                    <div className="text-blue-400">submissions.zip/</div>
+                  <div className="rounded-lg bg-slate-50 border border-slate-200 p-4 font-mono text-xs text-slate-900">
+                    <div className="text-blue-600">submissions.zip/</div>
                     <div className="ml-4">├── u1234567_fizzbuzz.py</div>
                     <div className="ml-4">├── u7654321_fizzbuzz.py</div>
                     <div className="ml-4">├── u9999999_fizzbuzz.py</div>
