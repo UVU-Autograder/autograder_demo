@@ -2,31 +2,11 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Code2, BookOpen, Award, Sparkles, Zap, Target, Users } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Code2, Upload, FileText, Zap, Award, BarChart3, Clock, CheckCircle2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { getAssignments } from "@/lib/assignments";
-import { DIFFICULTY_LEVELS } from "@/lib/constants";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {
-  const assignments = getAssignments();
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
-  };
-
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -43,7 +23,7 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">UVU Autograder</h1>
-                <p className="text-sm text-slate-600">AI-Powered Code Evaluation</p>
+                <p className="text-sm text-slate-600">Instructor Dashboard</p>
               </div>
             </motion.div>
             <motion.div
@@ -52,15 +32,9 @@ export default function Home() {
               className="flex items-center gap-3"
             >
               <Link href="/instructor">
-                <Button variant="outline" className="gap-2">
-                  <Users className="h-4 w-4" />
-                  Instructor
-                </Button>
-              </Link>
-              <Link href="/bulk">
-                <Button variant="outline" className="gap-2">
-                  <Award className="h-4 w-4" />
-                  Bulk Grade
+                <Button variant="outline">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Manage Assignments
                 </Button>
               </Link>
             </motion.div>
@@ -74,92 +48,145 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-12"
+          className="text-center max-w-4xl mx-auto mb-16"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 mb-6">
-            <Sparkles className="h-4 w-4 text-blue-600" />
-            <span className="text-sm text-blue-600 font-medium">AI-Powered Evaluation</span>
+            <Zap className="h-4 w-4 text-blue-600" />
+            <span className="text-sm text-blue-600 font-medium">AI-Powered Code Grading</span>
           </div>
-          <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
-            Master Coding with Instant Feedback
+          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
+            Grade 100 Assignments in 10 Minutes
           </h2>
-          <p className="text-xl text-slate-600 mb-8">
-            Practice coding problems and receive detailed AI-powered feedback on correctness, code quality, and efficiency
+          <p className="text-xl text-slate-600 mb-4">
+            Intelligent autograding with rubric-based AI feedback. Focus on teaching while we handle the grading.
           </p>
-          <div className="flex items-center justify-center gap-8 text-sm">
-            <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-yellow-500" />
-              <span className="text-slate-600">Instant Execution</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-green-500" />
-              <span className="text-slate-600">Smart Rubrics</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-purple-500" />
-              <span className="text-slate-600">AI Feedback</span>
-            </div>
-          </div>
+          <p className="text-lg text-slate-500">
+            Upload submissions, get detailed feedback on correctness, code quality, and efficiency—instantly.
+          </p>
+        </motion.div>
+
+        {/* Value Props */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="grid md:grid-cols-3 gap-6 mb-12"
+        >
+          <Card className="border-l-4 border-l-blue-500">
+            <CardHeader>
+              <Zap className="h-10 w-10 text-blue-600 mb-3" />
+              <CardTitle>10x Faster Grading</CardTitle>
+              <CardDescription>
+                Bulk grade 100+ submissions in minutes with AI-powered evaluation
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="border-l-4 border-l-green-500">
+            <CardHeader>
+              <CheckCircle2 className="h-10 w-10 text-green-600 mb-3" />
+              <CardTitle>Consistent Feedback</CardTitle>
+              <CardDescription>
+                Every student gets detailed, fair evaluation based on your rubric
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="border-l-4 border-l-purple-500">
+            <CardHeader>
+              <Award className="h-10 w-10 text-purple-600 mb-3" />
+              <CardTitle>Beyond Test Cases</CardTitle>
+              <CardDescription>
+                AI evaluates code quality, efficiency, and style—not just correctness
+              </CardDescription>
+            </CardHeader>
+          </Card>
         </motion.div>
       </section>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 pb-16">
-        <div className="mb-8">
-          <h3 className="text-2xl font-bold mb-2">Practice Problems</h3>
-          <p className="text-muted-foreground">Select an assignment to start coding and get instant AI feedback</p>
-        </div>
-
-        <motion.div 
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {assignments.map((assignment, index) => {
-            const difficulty = DIFFICULTY_LEVELS[assignment.difficulty];
-            return (
-              <motion.div key={assignment.id} variants={item}>
-                <Card className="group h-full hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1 border-border/50 bg-card/50 backdrop-blur">
+      {/* Quick Actions */}
+      <section className="container mx-auto px-4 pb-16">
+        <div className="max-w-4xl mx-auto">
+          <h3 className="text-3xl font-bold mb-8 text-center">Quick Actions</h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Link href="/instructor/assignments/new">
+                <Card className="h-full cursor-pointer hover:shadow-lg hover:border-blue-500 transition-all">
                   <CardHeader>
-                    <div className="flex items-start justify-between mb-3">
-                      <Badge className={`${difficulty.bgColor} ${difficulty.textColor} ${difficulty.borderColor} border`}>
-                        {difficulty.label}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        {assignment.language}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-xl group-hover:text-blue-400 transition-colors">{assignment.title}</CardTitle>
-                    <CardDescription className="line-clamp-2">
-                      {assignment.description}
+                    <Plus className="h-12 w-12 text-blue-600 mb-3" />
+                    <CardTitle className="text-2xl">Create Assignment</CardTitle>
+                    <CardDescription className="text-base">
+                      Set up a new coding assignment with test cases and rubrics
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <BookOpen className="h-4 w-4" />
-                      <span>{assignment.testCases.length} test cases</span>
-                    </div>
+                    <ul className="space-y-2 text-sm text-slate-600">
+                      <li>• Define test cases and evaluation criteria</li>
+                      <li>• Configure rubrics for comprehensive grading</li>
+                      <li>• Support for Python, Java, C++, JavaScript</li>
+                    </ul>
                   </CardContent>
-                  <CardFooter>
-                    <Link href={`/assignment/${assignment.id}`} className="w-full">
-                      <Button className="w-full group-hover:bg-blue-600 transition-colors">
-                        Solve Challenge
-                      </Button>
-                    </Link>
-                  </CardFooter>
                 </Card>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </main>
+              </Link>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Link href="/bulk">
+                <Card className="h-full cursor-pointer hover:shadow-lg hover:border-green-500 transition-all">
+                  <CardHeader>
+                    <Upload className="h-12 w-12 text-green-600 mb-3" />
+                    <CardTitle className="text-2xl">Grade Submissions</CardTitle>
+                    <CardDescription className="text-base">
+                      Upload individual files or bulk CSV for batch grading
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-sm text-slate-600">
+                      <li>• Single submission testing and grading</li>
+                      <li>• Bulk CSV upload (student_id, code)</li>
+                      <li>• ZIP upload support (coming soon)</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats/Features */}
+      <section className="container mx-auto px-4 pb-16">
+        <div className="max-w-4xl mx-auto bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-12 border">
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div>
+              <Clock className="h-8 w-8 text-blue-600 mx-auto mb-3" />
+              <div className="text-3xl font-bold text-slate-900 mb-2">Instant</div>
+              <div className="text-slate-600">Feedback for students</div>
+            </div>
+            <div>
+              <BarChart3 className="h-8 w-8 text-green-600 mx-auto mb-3" />
+              <div className="text-3xl font-bold text-slate-900 mb-2">4 Metrics</div>
+              <div className="text-slate-600">Correctness, quality, efficiency, edge cases</div>
+            </div>
+            <div>
+              <Award className="h-8 w-8 text-purple-600 mx-auto mb-3" />
+              <div className="text-3xl font-bold text-slate-900 mb-2">AI-Powered</div>
+              <div className="text-slate-600">Intelligent code evaluation</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="mt-20 border-t bg-background/50 backdrop-blur py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>UVU Computer Science Department • Autograder Demo Prototype</p>
-          <p className="mt-2 text-xs">Powered by Judge0 & OpenRouter AI</p>
+      <footer className="mt-12 border-t bg-white py-8">
+        <div className="container mx-auto px-4 text-center text-sm text-slate-600">
+          <p className="font-semibold">UVU Computer Science Department</p>
+          <p className="mt-2">AI Autograder Prototype</p>
+          <p className="mt-2 text-xs text-slate-500">Powered by Judge0 & OpenRouter AI</p>
         </div>
       </footer>
     </div>

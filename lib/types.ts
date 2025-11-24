@@ -24,6 +24,14 @@ export interface Rubric {
   };
 }
 
+// Evaluation method types
+export type EvaluationMethod = 
+  | { type: 'unit-test' }
+  | { type: 'output-match'; fuzzyMatch?: boolean }
+  | { type: 'function-signature'; functions: { name: string; params: string[] }[] }
+  | { type: 'pattern-match'; required?: string[]; forbidden?: string[] }
+  | { type: 'custom'; script: string };
+
 export interface Assignment {
   id: string;
   title: string;
@@ -34,6 +42,13 @@ export interface Assignment {
   starterCode: string;
   testCases: TestCase[];
   rubric: Rubric;
+  // New fields for enhanced functionality
+  evaluationMethod?: EvaluationMethod;
+  timeLimit?: number; // seconds, default 5
+  memoryLimit?: number; // KB, default 256000
+  dueDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface TestResult {
@@ -47,6 +62,18 @@ export interface TestResult {
   memory: number | null;
 }
 
+export interface AIEvaluation {
+  feedback: string;
+  rubricScores: {
+    correctness: number;
+    codeQuality: number;
+    efficiency: number;
+    edgeCases: number;
+  };
+  suggestions: string[];
+  strengths: string[];
+}
+
 export interface GradingResult {
   assignment: Assignment;
   code: string;
@@ -54,18 +81,51 @@ export interface GradingResult {
   passedCount: number;
   totalCount: number;
   testScore: number;
-  aiEvaluation: {
-    feedback: string;
-    rubricScores: {
-      correctness: number;
-      codeQuality: number;
-      efficiency: number;
-      edgeCases: number;
-    };
-    suggestions: string[];
-    strengths: string[];
-  };
+  aiEvaluation: AIEvaluation;
   finalScore: number;
   maxScore: number;
   gradedAt: Date;
+}
+
+// New types for instructor workflow
+export interface Submission {
+  id: string;
+  assignmentId: string;
+  studentId: string;
+  studentName?: string;
+  code: string;
+  language: string;
+  submittedAt: Date;
+  
+  // Grading results
+  status: 'pending' | 'grading' | 'graded' | 'error';
+  testResults?: TestResult[];
+  aiEvaluation?: AIEvaluation;
+  finalScore?: number;
+  maxScore: number;
+  gradedAt?: Date;
+  
+  // Metadata
+  filename: string;
+  fileSize: number;
+  attemptNumber: number;
+  isLate: boolean;
+  
+  // Manual review
+  manualOverride?: {
+    score: number;
+    comment: string;
+    reviewedAt: Date;
+  };
+}
+
+export interface BulkUploadResult {
+  total: number;
+  successful: number;
+  failed: number;
+  submissions: Submission[];
+  errors: {
+    filename: string;
+    error: string;
+  }[];
 }

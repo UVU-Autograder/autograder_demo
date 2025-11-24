@@ -1,4 +1,4 @@
-import { judge0Service } from './judge0.service';
+import { codeExecutionService } from './code-execution.factory';
 import { openRouterService } from './openrouter.service';
 import type { Assignment, TestResult, GradingResult } from '../types';
 
@@ -65,12 +65,12 @@ export class GradingService {
     assignment: Assignment,
     code: string
   ): Promise<TestResult[]> {
-    const languageId = judge0Service.getLanguageId(assignment.language);
+    const languageId = codeExecutionService.getLanguageId(assignment.language);
     const results: TestResult[] = [];
 
     for (const testCase of assignment.testCases) {
       try {
-        const result = await judge0Service.executeCode({
+        const result = await codeExecutionService.executeCode({
           source_code: code,
           language_id: languageId,
           stdin: testCase.input,

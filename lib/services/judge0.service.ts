@@ -1,30 +1,14 @@
 import axios from 'axios';
+import { 
+  ICodeExecutionService, 
+  SubmissionResult, 
+  ExecutionRequest 
+} from './code-execution.interface';
 
 const JUDGE0_API_URL = process.env.JUDGE0_API_URL || 'http://localhost:2358';
 
-export interface SubmissionResult {
-  stdout: string | null;
-  stderr: string | null;
-  status: {
-    id: number;
-    description: string;
-  };
-  time: string | null;
-  memory: number | null;
-  compile_output: string | null;
-}
-
-export interface ExecutionRequest {
-  source_code: string;
-  language_id: number;
-  stdin?: string;
-  expected_output?: string;
-  cpu_time_limit?: number;
-  memory_limit?: number;
-}
-
 // Language IDs for Judge0
-export const LANGUAGE_IDS = {
+const LANGUAGE_IDS = {
   javascript: 63,  // Node.js
   python: 71,      // Python 3
   java: 62,        // Java
@@ -33,7 +17,10 @@ export const LANGUAGE_IDS = {
   typescript: 74,  // TypeScript
 } as const;
 
-export class Judge0Service {
+/**
+ * Judge0 implementation of code execution service
+ */
+export class Judge0Service implements ICodeExecutionService {
   private apiUrl: string;
 
   constructor(apiUrl?: string) {
@@ -45,6 +32,21 @@ export class Judge0Service {
    */
   async submitCode(request: ExecutionRequest): Promise<string> {
     try {
+      const headers: Record<string, string> = {};
+      
+      // Add RapidAPI headers if using RapidAPI endpoint
+      if (this.apiUrl.includes('rapidapi.com')) {
+        const apiKey = process.env.RAPIDAPI_KEY;
+        if (!apiKey) {
+          throw new Error(
+            '⚠️ RapidAPI key not configured. Please add RAPIDAPI_KEY to your .env.local file. ' +
+            'Get your free key at: https://rapidapi.com/judge0-official/api/judge0-ce'
+          );
+        }
+        headers['X-RapidAPI-Key'] = apiKey;
+        headers['X-RapidAPI-Host'] = 'judge0-ce.p.rapidapi.com';
+      }
+
       const response = await axios.post(`${this.apiUrl}/submissions`, {
         source_code: Buffer.from(request.source_code).toString('base64'),
         language_id: request.language_id,
@@ -56,12 +58,38 @@ export class Judge0Service {
         memory_limit: request.memory_limit || 256000, // 256 MB in KB
       }, {
         params: { base64_encoded: true },
+        headers,
       });
 
       return response.data.token;
-    } catch (error) {
-      console.error('Judge0 submission error:', error);
-      throw new Error('Failed to submit code to Judge0');
+    } catch (error: any) {
+      console.error('Judge0 submission error:', error.response?.data || error.message);
+      
+      // Handle specific error cases
+      if (error.response?.status === 429) {
+        throw new Error(
+          '⚠️ API quota exceeded! You\'ve reached the daily limit (50 requests/day on free tier). ' +
+          'Upgrade at: https://rapidapi.com/judge0-official/api/judge0-ce/pricing'
+        );
+      }
+      
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        throw new Error(
+          '⚠️ Authentication failed. Please check your RAPIDAPI_KEY in .env.local. ' +
+          'Get a free key at: https://rapidapi.com/judge0-official/api/judge0-ce'
+        );
+      }
+      
+      if (error.code === 'ECONNREFUSED') {
+        throw new Error(
+          '⚠️ Cannot connect to Judge0 API. If using localhost, make sure Docker is running. ' +
+          'Otherwise, check your JUDGE0_API_URL in .env.local'
+        );
+      }
+      
+      throw new Error(
+        error.message || 'Failed to submit code. Please check your internet connection and try again.'
+      );
     }
   }
 
@@ -70,8 +98,21 @@ export class Judge0Service {
    */
   async getSubmission(token: string): Promise<SubmissionResult> {
     try {
+      const headers: Record<string, string> = {};
+      
+      // Add RapidAPI headers if using RapidAPI endpoint
+      if (this.apiUrl.includes('rapidapi.com')) {
+        const apiKey = process.env.RAPIDAPI_KEY;
+        if (!apiKey) {
+          throw new Error('⚠️ RapidAPI key not configured. Please add RAPIDAPI_KEY to your .env.local file.');
+        }
+        headers['X-RapidAPI-Key'] = apiKey;
+        headers['X-RapidAPI-Host'] = 'judge0-ce.p.rapidapi.com';
+      }
+
       const response = await axios.get(`${this.apiUrl}/submissions/${token}`, {
         params: { base64_encoded: true },
+        headers,
       });
 
       const data = response.data;
@@ -86,9 +127,16 @@ export class Judge0Service {
           ? Buffer.from(data.compile_output, 'base64').toString() 
           : null,
       };
-    } catch (error) {
-      console.error('Judge0 get submission error:', error);
-      throw new Error('Failed to get submission result from Judge0');
+    } catch (error: any) {
+      console.error('Judge0 get submission error:', error.response?.data || error.message);
+      
+      if (error.response?.status === 429) {
+        throw new Error('⚠️ API quota exceeded! Daily limit reached.');
+      }
+      
+      throw new Error(
+        error.message || 'Failed to retrieve code execution results. Please try again.'
+      );
     }
   }
 
@@ -121,5 +169,3 @@ export class Judge0Service {
     return LANGUAGE_IDS[normalized as keyof typeof LANGUAGE_IDS] || LANGUAGE_IDS.javascript;
   }
 }
-
-export const judge0Service = new Judge0Service();

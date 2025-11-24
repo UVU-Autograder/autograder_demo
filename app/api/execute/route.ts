@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAssignmentById } from '@/lib/assignments';
-import { judge0Service } from '@/lib/services/judge0.service';
+import { codeExecutionService } from '@/lib/services/code-execution.factory';
 import type { TestResult } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Assignment not found' }, { status: 404 });
     }
 
-    const languageId = judge0Service.getLanguageId(assignment.language);
+    const languageId = codeExecutionService.getLanguageId(assignment.language);
     const testResults: TestResult[] = [];
 
     // Run only visible test cases for "Run Code"
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     for (const testCase of visibleTests) {
       try {
-        const result = await judge0Service.executeCode({
+        const result = await codeExecutionService.executeCode({
           source_code: code,
           language_id: languageId,
           stdin: testCase.input,
