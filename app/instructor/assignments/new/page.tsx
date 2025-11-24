@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowLeft, Plus, Trash2, Save, Eye } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, Plus, Trash2, Save, Eye, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +31,7 @@ export default function NewAssignment() {
   ]);
   const [rubric, setRubric] = useState(DEFAULT_RUBRIC);
   const [codeRequirements, setCodeRequirements] = useState<CodeRequirements>({});
+  const [expandedTestCase, setExpandedTestCase] = useState<number | null>(0);
 
   const addTestCase = () => {
     setTestCases([...testCases, { input: "", expectedOutput: "", hidden: false }]);
@@ -109,8 +110,8 @@ export default function NewAssignment() {
   const totalPoints = Object.values(rubric).reduce((sum, r) => sum + r.points, 0);
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
+      <header className="sticky top-0 z-50 border-b border-white/20 bg-white/80 backdrop-blur-xl shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <motion.div 
@@ -124,10 +125,10 @@ export default function NewAssignment() {
                 </Button>
               </Link>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   Create New Assignment
                 </h1>
-                <p className="text-sm text-slate-600">Design a new coding challenge</p>
+                <p className="text-sm text-slate-600">Design a new coding challenge with AI-powered grading</p>
               </div>
             </motion.div>
             <motion.div
@@ -135,7 +136,10 @@ export default function NewAssignment() {
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center gap-3"
             >
-              <Button variant="outline" onClick={handleSave} className="gap-2">
+              <Button 
+                onClick={handleSave} 
+                className="gap-2 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg shadow-blue-500/30"
+              >
                 <Save className="h-4 w-4" />
                 Save Assignment
               </Button>
@@ -154,30 +158,33 @@ export default function NewAssignment() {
           </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Assignment Details</CardTitle>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+              <CardHeader className="border-b border-slate-100">
+                <CardTitle className="flex items-center gap-2 text-slate-800">
+                  <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+                  Assignment Details
+                </CardTitle>
                 <CardDescription>Basic information about the assignment</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Title</label>
+                  <label className="text-sm font-semibold text-slate-700">Title</label>
                   <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g., Fibonacci Sequence"
-                    className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Difficulty</label>
+                    <label className="text-sm font-semibold text-slate-700">Difficulty</label>
                     <select
                       value={difficulty}
                       onChange={(e) => setDifficulty(e.target.value as "easy" | "medium" | "hard")}
-                      className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     >
                       <option value="easy">Easy</option>
                       <option value="medium">Medium</option>
@@ -186,11 +193,11 @@ export default function NewAssignment() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Language</label>
+                    <label className="text-sm font-semibold text-slate-700">Language</label>
                     <select
                       value={language}
                       onChange={(e) => setLanguage(e.target.value)}
-                      className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     >
                       {Object.entries(SUPPORTED_LANGUAGES).map(([key, lang]) => (
                         <option key={key} value={key}>
@@ -202,13 +209,13 @@ export default function NewAssignment() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Description</label>
+                  <label className="text-sm font-semibold text-slate-700">Description</label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Provide a brief description of the problem..."
                     rows={4}
-                    className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
                   />
                 </div>
               </CardContent>
@@ -216,9 +223,12 @@ export default function NewAssignment() {
           </TabsContent>
 
           <TabsContent value="code" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Instructions</CardTitle>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+              <CardHeader className="border-b border-slate-100">
+                <CardTitle className="flex items-center gap-2 text-slate-800">
+                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                  Instructions
+                </CardTitle>
                 <CardDescription>Detailed problem description for students</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -227,15 +237,18 @@ export default function NewAssignment() {
                   onChange={(e) => setInstructions(e.target.value)}
                   placeholder="Write detailed instructions here..."
                   rows={10}
-                  className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all resize-none font-mono text-sm"
                 />
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Starter Code</CardTitle>
-                <CardDescription>Initial code template for students</CardDescription>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+              <CardHeader className="border-b border-slate-100">
+                <CardTitle className="flex items-center gap-2 text-slate-800">
+                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                  Starter Code
+                </CardTitle>
+                <CardDescription>Initial code template for students (optional)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
                 <textarea
@@ -243,7 +256,7 @@ export default function NewAssignment() {
                   onChange={(e) => setStarterCode(e.target.value)}
                   placeholder="def fibonacci(n):\n    # Write your code here\n    pass"
                   rows={10}
-                  className="w-full px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-900 text-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all resize-none font-mono text-sm"
                 />
               </CardContent>
             </Card>
@@ -251,9 +264,12 @@ export default function NewAssignment() {
 
           {/* Code Requirements Tab */}
           <TabsContent value="requirements" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Code Analysis Requirements</CardTitle>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+              <CardHeader className="border-b border-slate-100">
+                <CardTitle className="flex items-center gap-2 text-slate-800">
+                  <div className="h-2 w-2 rounded-full bg-orange-500"></div>
+                  Code Analysis Requirements
+                </CardTitle>
                 <CardDescription>
                   Define what constructs, patterns, and style rules the code must follow.
                   These requirements will be automatically checked during grading.
@@ -270,109 +286,154 @@ export default function NewAssignment() {
           </TabsContent>
 
           <TabsContent value="testing" className="space-y-6">
-            <Card>
-              <CardHeader>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+              <CardHeader className="border-b border-slate-100">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>Test Cases</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-slate-800">
+                      <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+                      Test Cases
+                    </CardTitle>
                     <CardDescription>Define input and expected output pairs</CardDescription>
                   </div>
-                  <Button onClick={addTestCase} size="sm" className="gap-2">
+                  <Button onClick={addTestCase} size="sm" className="gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/30">
                     <Plus className="h-4 w-4" />
                     Add Test Case
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3">
                 {testCases.map((testCase, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="border rounded-lg p-4 space-y-3"
+                    className="relative border border-slate-200 bg-linear-to-br from-white/80 to-slate-50/80 backdrop-blur rounded-xl overflow-hidden shadow-lg shadow-slate-200/50 hover:shadow-xl transition-all"
                   >
-                    <div className="flex items-center justify-between mb-2">
+                    {/* Collapsible Header */}
+                    <button
+                      onClick={() => setExpandedTestCase(expandedTestCase === index ? null : index)}
+                      className="w-full flex items-center justify-between p-5 hover:bg-white/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-blue-600 text-white text-sm font-bold shadow-md">
+                          {index + 1}
+                        </div>
+                        <div className="text-left">
+                          <span className="font-semibold text-slate-800">Test Case {index + 1}</span>
+                          {testCase.hidden && (
+                            <span className="ml-2 text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">Hidden</span>
+                          )}
+                        </div>
+                      </div>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">Test Case {index + 1}</span>
-                        <label className="flex items-center gap-2 text-sm text-slate-600">
-                          <input
-                            type="checkbox"
-                            checked={testCase.hidden}
-                            onChange={(e) => updateTestCase(index, "hidden", e.target.checked)}
-                            className="rounded"
-                          />
-                          Hidden
-                        </label>
+                        {testCases.length > 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeTestCase(index);
+                            }}
+                            className="h-8 w-8 hover:bg-red-50 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                        {expandedTestCase === index ? (
+                          <ChevronUp className="h-5 w-5 text-slate-400" />
+                        ) : (
+                          <ChevronDown className="h-5 w-5 text-slate-400" />
+                        )}
                       </div>
-                      {testCases.length > 1 && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeTestCase(index)}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      )}
-                    </div>
+                    </button>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Input</label>
-                        <textarea
-                          value={testCase.input}
-                          onChange={(e) => updateTestCase(index, "input", e.target.value)}
-                          placeholder="5"
-                          rows={3}
-                          className="w-full px-3 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Expected Output</label>
-                        <textarea
-                          value={testCase.expectedOutput}
-                          onChange={(e) => updateTestCase(index, "expectedOutput", e.target.value)}
-                          placeholder="5"
-                          rows={3}
-                          className="w-full px-3 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
-                        />
-                      </div>
-                    </div>
+                    {/* Collapsible Content */}
+                    <AnimatePresence>
+                      {expandedTestCase === index && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="border-t border-slate-200"
+                        >
+                          <div className="p-5 space-y-4 bg-white/30">
+                            <label className="flex items-center gap-2 text-sm text-slate-700">
+                              <input
+                                type="checkbox"
+                                checked={testCase.hidden}
+                                onChange={(e) => updateTestCase(index, "hidden", e.target.checked)}
+                                className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                              />
+                              <span className="font-medium">Hidden from students</span>
+                            </label>
+
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Input</label>
+                                <textarea
+                                  value={testCase.input}
+                                  onChange={(e) => updateTestCase(index, "input", e.target.value)}
+                                  placeholder="5"
+                                  rows={3}
+                                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white/80 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none font-mono text-sm"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Expected Output</label>
+                                <textarea
+                                  value={testCase.expectedOutput}
+                                  onChange={(e) => updateTestCase(index, "expectedOutput", e.target.value)}
+                                  placeholder="5"
+                                  rows={3}
+                                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white/80 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none font-mono text-sm"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 ))}
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+              <CardHeader className="border-b border-slate-100">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>Grading Rubric</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-slate-800">
+                      <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                      Grading Rubric
+                    </CardTitle>
                     <CardDescription>Configure point distribution</CardDescription>
                   </div>
-                  <Badge variant="outline" className="text-base">
+                  <Badge className="text-base px-4 py-1.5 bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-md">
                     Total: {totalPoints} points
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {Object.entries(rubric).map(([key, value]) => (
-                  <div key={key} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={key} className="flex items-center justify-between p-4 border border-slate-200 bg-linear-to-r from-white/80 to-slate-50/60 backdrop-blur rounded-xl hover:shadow-md transition-all">
                     <div className="flex-1">
-                      <p className="font-medium capitalize">
+                      <p className="font-semibold text-slate-800 capitalize">
                         {key.replace(/([A-Z])/g, " $1").trim()}
                       </p>
                       <p className="text-sm text-slate-600">{value.description}</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <input
                         type="number"
                         value={value.points}
                         onChange={(e) => updateRubricPoints(key, parseInt(e.target.value) || 0)}
                         min="0"
                         max="100"
-                        className="w-20 px-3 py-1 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+                        className="w-20 px-3 py-2 rounded-lg border border-slate-200 bg-white/80 backdrop-blur focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-center font-semibold"
                       />
-                      <span className="text-sm text-slate-600">pts</span>
+                      <span className="text-sm font-medium text-slate-600">pts</span>
                     </div>
                   </div>
                 ))}
