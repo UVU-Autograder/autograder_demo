@@ -213,9 +213,9 @@ export default function BulkGradingPage() {
   const failedCount = submissions.filter(s => s.status === 'failed').length;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/40 to-purple-50/40">
       {/* Header */}
-      <header className="border-b bg-white px-6 py-4 shadow-sm">
+      <header className="border-b border-white/20 bg-white/80 backdrop-blur-xl px-6 py-4 shadow-sm">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/">
@@ -235,7 +235,7 @@ export default function BulkGradingPage() {
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
         {/* Upload Section */}
-        <Card className="mb-8">
+        <Card className="mb-8 border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50">
           <CardHeader>
             <CardTitle>Upload Submissions</CardTitle>
             <CardDescription>
@@ -342,7 +342,7 @@ export default function BulkGradingPage() {
 
         {/* Progress Bar */}
         {isProcessing && (
-          <Card className="mb-8">
+          <Card className="mb-8 border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50">
             <CardContent className="pt-6">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
@@ -363,27 +363,27 @@ export default function BulkGradingPage() {
         {/* Results Summary */}
         {(completedCount > 0 || failedCount > 0) && (
           <div className="grid grid-cols-3 gap-4 mb-8">
-            <Card>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-lg shadow-slate-200/50">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <p className="text-2xl font-bold">{submissions.length}</p>
-                  <p className="text-sm text-slate-600">Total</p>
+                  <p className="text-3xl font-bold bg-linear-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">{submissions.length}</p>
+                  <p className="text-sm text-slate-600 font-medium mt-1">Total</p>
                 </div>
               </CardContent>
             </Card>
-            <Card className="border-green-200 bg-green-50">
+            <Card className="border-green-300/60 bg-linear-to-br from-green-50/80 to-green-100/60 backdrop-blur-xl shadow-lg shadow-green-200/50">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-green-600">{completedCount}</p>
-                  <p className="text-sm text-green-700">Completed</p>
+                  <p className="text-3xl font-bold text-green-600">{completedCount}</p>
+                  <p className="text-sm text-green-700 font-medium mt-1">Completed</p>
                 </div>
               </CardContent>
             </Card>
-            <Card className="border-red-200 bg-red-50">
+            <Card className="border-red-300/60 bg-linear-to-br from-red-50/80 to-red-100/60 backdrop-blur-xl shadow-lg shadow-red-200/50">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-red-600">{failedCount}</p>
-                  <p className="text-sm text-red-700">Failed</p>
+                  <p className="text-3xl font-bold text-red-600">{failedCount}</p>
+                  <p className="text-sm text-red-700 font-medium mt-1">Failed</p>
                 </div>
               </CardContent>
             </Card>
@@ -472,8 +472,8 @@ export default function BulkGradingPage() {
         {submissions.length === 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* CSV Format */}
-            <Card>
-              <CardHeader>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all duration-300">
+              <CardHeader className="border-b border-slate-100">
                 <CardTitle className="flex items-center gap-2">
                   <File className="h-5 w-5" />
                   CSV Format Example
@@ -505,8 +505,8 @@ u7654321,fizzbuzz,"def fizzbuzz(n):
             </Card>
 
             {/* ZIP Format */}
-            <Card>
-              <CardHeader>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all duration-300">
+              <CardHeader className="border-b border-slate-100">
                 <CardTitle className="flex items-center gap-2">
                   <FileArchive className="h-5 w-5" />
                   ZIP Format Example

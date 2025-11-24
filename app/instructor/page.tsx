@@ -53,9 +53,9 @@ export default function InstructorDashboard() {
   const totalTestCases = assignments.reduce((sum, a) => sum + a.testCases.length, 0);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/40 to-purple-50/40">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-white shadow-sm">
+      <header className="sticky top-0 z-50 border-b border-white/20 bg-white/80 backdrop-blur-xl shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <motion.div 
@@ -101,43 +101,43 @@ export default function InstructorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
         >
-          <Card>
+          <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all duration-300">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-600 mb-1">Total Assignments</p>
-                  <p className="text-3xl font-bold">{assignments.length}</p>
+                  <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide mb-1">Total Assignments</p>
+                  <p className="text-4xl font-bold bg-linear-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">{assignments.length}</p>
                 </div>
-                <div className="rounded-lg bg-linear-to-br from-blue-600 to-blue-500 p-3 shadow-lg shadow-blue-500/50">
-                  <BookOpen className="h-6 w-6 text-white" />
+                <div className="rounded-xl bg-linear-to-br from-blue-600 to-blue-500 p-4 shadow-xl shadow-blue-500/30">
+                  <BookOpen className="h-7 w-7 text-white" />
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all duration-300">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-600 mb-1">Total Test Cases</p>
-                  <p className="text-3xl font-bold">{totalTestCases}</p>
+                  <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide mb-1">Total Test Cases</p>
+                  <p className="text-4xl font-bold bg-linear-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">{totalTestCases}</p>
                 </div>
-                <div className="rounded-lg bg-linear-to-br from-purple-600 to-purple-500 p-3 shadow-lg shadow-purple-500/50">
-                  <Code2 className="h-6 w-6 text-white" />
+                <div className="rounded-xl bg-linear-to-br from-purple-600 to-purple-500 p-4 shadow-xl shadow-purple-500/30">
+                  <Code2 className="h-7 w-7 text-white" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all duration-300">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-600 mb-1">Total Points</p>
-                  <p className="text-3xl font-bold">{assignments.reduce((sum, a) => sum + a.maxScore, 0)}</p>
+                  <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide mb-1">Total Points</p>
+                  <p className="text-4xl font-bold bg-linear-to-r from-green-600 to-green-800 bg-clip-text text-transparent">{assignments.reduce((sum, a) => sum + a.maxScore, 0)}</p>
                 </div>
-                <div className="rounded-lg bg-linear-to-br from-green-600 to-green-500 p-3 shadow-lg shadow-green-500/50">
-                  <BarChart3 className="h-6 w-6 text-white" />
+                <div className="rounded-xl bg-linear-to-br from-green-600 to-green-500 p-4 shadow-xl shadow-green-500/30">
+                  <BarChart3 className="h-7 w-7 text-white" />
                 </div>
               </div>
             </CardContent>
@@ -145,16 +145,16 @@ export default function InstructorDashboard() {
         </motion.div>
 
         {/* Search */}
-        <Card className="mb-6">
+        <Card className="mb-6 border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-lg shadow-slate-200/50">
           <CardContent className="pt-6">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search assignments..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl bg-white/80 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               />
             </div>
           </CardContent>
@@ -162,7 +162,7 @@ export default function InstructorDashboard() {
 
         {/* Assignments Grid */}
         {filteredAssignments.length === 0 ? (
-          <Card className="text-center py-12">
+          <Card className="text-center py-12 border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50">
             <CardContent>
               <BookOpen className="h-16 w-16 text-slate-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-slate-700 mb-2">
@@ -189,7 +189,7 @@ export default function InstructorDashboard() {
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ scale: 1.02 }}
               >
-                <Card className="h-full hover:shadow-lg transition-shadow">
+                <Card className="h-full border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-blue-400 transition-all duration-300">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
