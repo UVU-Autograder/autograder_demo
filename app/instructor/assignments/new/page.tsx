@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { SUPPORTED_LANGUAGES, DEFAULT_RUBRIC } from "@/lib/constants";
 import { CodeRequirementsEditor } from "@/components/code-requirements-editor";
 import { CodeRequirements } from "@/lib/types";
+import { assignmentStorage } from "@/lib/services/assignment-storage.service";
 
 export default function NewAssignment() {
   const router = useRouter();
@@ -61,20 +62,48 @@ export default function NewAssignment() {
     // Validation
     if (!title.trim()) {
       toast.error("Please enter a title");
+      setActiveTab("basic");
       return;
     }
     if (!description.trim()) {
       toast.error("Please enter a description");
+      setActiveTab("basic");
       return;
     }
     if (testCases.some(tc => !tc.input.trim() || !tc.expectedOutput.trim())) {
       toast.error("All test cases must have input and output");
+      setActiveTab("testing");
       return;
     }
 
-    // In a real app, this would save to a database
-    toast.success("Assignment created successfully!");
-    router.push("/instructor");
+    try {
+      // Calculate max score from rubric
+      const maxScore = Object.values(rubric).reduce((sum, r) => sum + r.points, 0);
+
+      // Save assignment
+      const assignment = assignmentStorage.create({
+        title: title.trim(),
+        description: description.trim(),
+        difficulty,
+        language,
+        instructions: instructions.trim(),
+        starterCode: starterCode.trim() || undefined,
+        testCases,
+        rubric,
+        codeRequirements,
+        maxScore,
+      });
+
+      toast.success(`Assignment "${assignment.title}" created successfully!`);
+      
+      // Redirect to instructor dashboard after short delay
+      setTimeout(() => {
+        router.push("/instructor");
+      }, 500);
+    } catch (error) {
+      console.error('Error creating assignment:', error);
+      toast.error("Failed to create assignment. Please try again.");
+    }
   };
 
   const totalPoints = Object.values(rubric).reduce((sum, r) => sum + r.points, 0);
