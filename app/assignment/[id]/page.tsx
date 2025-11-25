@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import type { Assignment, GradingResult, TestResult } from '@/lib/types';
 import { TestResultListSkeleton, GradingFeedbackSkeleton } from '@/components/skeletons/grading-skeleton';
+import ReactMarkdown from 'react-markdown';
 
 export default function AssignmentPage() {
   const params = useParams();
@@ -110,14 +111,8 @@ export default function AssignmentPage() {
     );
   }
 
-  const difficultyColors = {
-    intro: "bg-blue-100 text-blue-700 border-blue-300",
-    intermediate: "bg-purple-100 text-purple-700 border-purple-300",
-    advanced: "bg-red-100 text-red-700 border-red-300",
-  };
-
   return (
-    <div className="flex h-screen flex-col bg-slate-50">
+    <div className="flex h-screen flex-col bg-slate-50">{/* Header */}
       {/* Header */}
       <header className="border-b bg-white px-6 py-4 shadow-sm">
         <div className="flex items-center justify-between">
@@ -130,11 +125,15 @@ export default function AssignmentPage() {
             </Link>
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-bold">{assignment.title}</h1>
-              <Badge className={difficultyColors[assignment.difficulty]}>
-                {assignment.difficulty === 'intro' ? 'Intro Level' : 
-                 assignment.difficulty === 'intermediate' ? 'Intermediate' : 
-                 'Advanced'}
-              </Badge>
+              {assignment.tags && assignment.tags.length > 0 && (
+                <div className="flex gap-2">
+                  {assignment.tags.map(tag => (
+                    <Badge key={tag} variant="outline" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex gap-2">
@@ -170,13 +169,40 @@ export default function AssignmentPage() {
         {/* Left Panel - Problem Description */}
         <div className="w-1/2 overflow-y-auto border-r bg-white p-6">
           <div className="max-w-2xl">
-            <h2 className="text-2xl font-bold mb-4">Problem Description</h2>
-            <p className="text-slate-700 mb-6 leading-relaxed">{assignment.description}</p>
+            <div className="prose prose-slate max-w-none mb-8">
+              <ReactMarkdown
+                components={{
+                  h1: ({ children }) => <h1 className="text-3xl font-bold mt-8 mb-4 text-slate-900">{children}</h1>,
+                  h2: ({ children }) => <h2 className="text-2xl font-bold mt-6 mb-3 text-slate-900">{children}</h2>,
+                  h3: ({ children }) => <h3 className="text-xl font-semibold mt-5 mb-2 text-slate-800">{children}</h3>,
+                  p: ({ children }) => <p className="mb-4 leading-relaxed text-slate-700">{children}</p>,
+                  ul: ({ children }) => <ul className="list-disc list-inside mb-4 space-y-2">{children}</ul>,
+                  ol: ({ children }) => <ol className="list-decimal list-inside mb-4 space-y-2">{children}</ol>,
+                  li: ({ children }) => <li className="text-slate-700">{children}</li>,
+                  code: ({ children, className }) => {
+                    const isBlock = className?.includes('language-');
+                    if (isBlock) {
+                      return <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto mb-4 text-sm"><code>{children}</code></pre>;
+                    }
+                    return <code className="px-2 py-1 bg-slate-100 text-slate-800 rounded text-sm font-mono">{children}</code>;
+                  },
+                  pre: ({ children }) => <div className="mb-4">{children}</div>,
+                  strong: ({ children }) => <strong className="font-semibold text-slate-900">{children}</strong>,
+                  em: ({ children }) => <em className="italic">{children}</em>,
+                  table: ({ children }) => <table className="min-w-full divide-y divide-slate-200 mb-4">{children}</table>,
+                  thead: ({ children }) => <thead className="bg-slate-50">{children}</thead>,
+                  tbody: ({ children }) => <tbody className="bg-white divide-y divide-slate-200">{children}</tbody>,
+                  tr: ({ children }) => <tr>{children}</tr>,
+                  th: ({ children }) => <th className="px-4 py-2 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">{children}</th>,
+                  td: ({ children }) => <td className="px-4 py-2 text-sm text-slate-700">{children}</td>,
+                  blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-slate-600 my-4">{children}</blockquote>,
+                }}
+              >
+                {assignment.instructions}
+              </ReactMarkdown>
+            </div>
 
-            <h3 className="text-lg font-semibold mb-3">Instructions</h3>
-            <p className="text-slate-700 mb-6 leading-relaxed">{assignment.instructions}</p>
-
-            <h3 className="text-lg font-semibold mb-3">Test Cases</h3>
+            <h3 className="text-lg font-semibold mb-3 mt-8">Test Cases</h3>
             <div className="space-y-4">
               {assignment.testCases.filter(tc => !tc.isHidden).map((testCase) => (
                 <Card key={testCase.id}>
