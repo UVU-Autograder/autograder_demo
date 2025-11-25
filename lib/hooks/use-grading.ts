@@ -67,6 +67,19 @@ export function useGrading({ assignment, code }: UseGradingProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           assignmentId: assignment.id,
+          // include full assignment metadata so server routes that can't access client localStorage
+          // can still use the assignment details to build prompts and rubric
+          assignment: {
+            title: assignment.title,
+            language: assignment.language,
+            description: assignment.description,
+            instructions: assignment.instructions,
+            testCases: assignment.testCases,
+            rubric: assignment.rubric,
+            maxScore: assignment.maxScore,
+            tags: assignment.tags,
+            isSample: assignment.isSample,
+          },
           code,
           settings: aiSettings,
           testResults: testResults.length > 0 ? testResults : undefined,

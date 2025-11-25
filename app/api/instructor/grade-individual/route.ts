@@ -20,16 +20,30 @@ interface AISettings {
 
 export async function POST(req: NextRequest) {
   try {
-    const { assignmentId, code, settings, testResults } = await req.json();
+    const body = await req.json();
+    const { assignmentId, assignment: bodyAssignment, code, settings, testResults } = body;
 
-    if (!assignmentId || !code) {
+    // debug: log incoming request keys so we can see what client actually sends
+    console.log('grade-individual request received - keys:', Object.keys(body));
+    console.log('assignmentId present:', !!assignmentId, 'assignment in body:', !!bodyAssignment);
+
+    // accept full assignment metadata in the request body (preferred for server-side grading)
+    if ((!assignmentId && !bodyAssignment) || !code) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
+    // prefer payload assignment if provided, otherwise attempt to look up by id
+    let assignment = bodyAssignment || null;
+    if (!assignment && assignmentId) {
+      try {
+        assignment = assignmentStorage.getById(assignmentId);
+      } catch (err) {
+        assignment = null;
+      }
+    }
 
-    const assignment = assignmentStorage.getById(assignmentId);
     if (!assignment) {
       return NextResponse.json(
         { error: 'Assignment not found' },
