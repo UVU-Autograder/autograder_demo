@@ -111,9 +111,9 @@ export default function AssignmentPage() {
   }
 
   const difficultyColors = {
-    easy: "bg-green-100 text-green-800 border-green-300",
-    medium: "bg-yellow-100 text-yellow-800 border-yellow-300",
-    hard: "bg-red-100 text-red-800 border-red-300",
+    intro: "bg-blue-100 text-blue-700 border-blue-300",
+    intermediate: "bg-purple-100 text-purple-700 border-purple-300",
+    advanced: "bg-red-100 text-red-700 border-red-300",
   };
 
   return (
@@ -131,7 +131,9 @@ export default function AssignmentPage() {
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-bold">{assignment.title}</h1>
               <Badge className={difficultyColors[assignment.difficulty]}>
-                {assignment.difficulty}
+                {assignment.difficulty === 'intro' ? 'Intro Level' : 
+                 assignment.difficulty === 'intermediate' ? 'Intermediate' : 
+                 'Advanced'}
               </Badge>
             </div>
           </div>

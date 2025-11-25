@@ -162,6 +162,47 @@ Return your evaluation in the following JSON format:
       ],
     };
   }
+  
+  async evaluateCodeWithCustomPrompt(
+    prompt: string,
+    language: string,
+    model?: string
+  ): Promise<string> {
+    const selectedModel = model || this.model;
+    
+    try {
+      const response = await axios.post(
+        'https://openrouter.ai/api/v1/chat/completions',
+        {
+          model: selectedModel,
+          messages: [
+            {
+              role: 'system',
+              content: `You are an expert ${language} programming instructor evaluating student code. Provide detailed, constructive feedback in JSON format.`,
+            },
+            {
+              role: 'user',
+              content: prompt,
+            },
+          ],
+          response_format: { type: 'json_object' },
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+            'X-Title': 'UVU Autograder',
+          },
+        }
+      );
+
+      return response.data.choices[0].message.content;
+    } catch (error) {
+      console.error('OpenRouter API error:', error);
+      throw error;
+    }
+  }
 }
 
 export const openRouterService = new OpenRouterService();

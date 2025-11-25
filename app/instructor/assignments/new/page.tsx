@@ -14,6 +14,7 @@ import { SUPPORTED_LANGUAGES, DEFAULT_RUBRIC } from "@/lib/constants";
 import { CodeRequirementsEditor } from "@/components/code-requirements-editor";
 import { CodeRequirements } from "@/lib/types";
 import { assignmentStorage } from "@/lib/services/assignment-storage.service";
+import { CodeEditor } from "@/components/code-editor";
 
 export default function NewAssignment() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function NewAssignment() {
 
   // Form state
   const [title, setTitle] = useState("");
-  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
+  const [difficulty, setDifficulty] = useState<"intro" | "intermediate" | "advanced">("intro");
   const [language, setLanguage] = useState("python");
   const [description, setDescription] = useState("");
   const [instructions, setInstructions] = useState("");
@@ -180,15 +181,15 @@ export default function NewAssignment() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-slate-700">Difficulty</label>
+                    <label className="text-sm font-semibold text-slate-700">Difficulty Level</label>
                     <select
                       value={difficulty}
-                      onChange={(e) => setDifficulty(e.target.value as "easy" | "medium" | "hard")}
+                      onChange={(e) => setDifficulty(e.target.value as "intro" | "intermediate" | "advanced")}
                       className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     >
-                      <option value="easy">Easy</option>
-                      <option value="medium">Medium</option>
-                      <option value="hard">Hard</option>
+                      <option value="intro">Intro Level (Weeks 1-3)</option>
+                      <option value="intermediate">Intermediate (Weeks 4-7)</option>
+                      <option value="advanced">Advanced (Weeks 8+)</option>
                     </select>
                   </div>
 
@@ -250,13 +251,13 @@ export default function NewAssignment() {
                 </CardTitle>
                 <CardDescription>Initial code template for students (optional)</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <textarea
+              <CardContent className="pt-4">
+                <CodeEditor
                   value={starterCode}
-                  onChange={(e) => setStarterCode(e.target.value)}
-                  placeholder="def fibonacci(n):\n    # Write your code here\n    pass"
-                  rows={10}
-                  className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-900 text-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all resize-none font-mono text-sm"
+                  onChange={setStarterCode}
+                  language={language}
+                  height="300px"
+                  placeholder={`# Starter code for ${language}\n# Students will build upon this template\n\ndef solution():\n    # TODO: Implement your solution here\n    pass`}
                 />
               </CardContent>
             </Card>

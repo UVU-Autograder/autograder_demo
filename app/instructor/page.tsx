@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Plus, FileEdit, Trash2, Copy, BarChart3, BookOpen, Code2, ArrowLeft, Search, MoreVertical } from "lucide-react";
+import { Plus, FileEdit, Trash2, Copy, BarChart3, BookOpen, Code2, ArrowLeft, Search, MoreVertical, Download, Sparkles, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FancyGradeButton } from "@/components/ui/fancy-grade-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { assignmentStorage, Assignment } from "@/lib/services/assignment-storage.service";
+import { seedSampleAssignments } from "@/lib/data/sample-assignments";
+import ReactMarkdown from "react-markdown";
 
 export default function InstructorDashboard() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -20,6 +23,16 @@ export default function InstructorDashboard() {
 
   const loadAssignments = () => {
     setAssignments(assignmentStorage.getAll());
+  };
+
+  const handleSeedSamples = () => {
+    const count = seedSampleAssignments();
+    if (count && count > 0) {
+      loadAssignments();
+      toast.success(`Added ${count} sample assignments!`);
+    } else {
+      toast.info("Sample assignments already exist");
+    }
   };
 
   const handleDelete = (id: string, title: string) => {
@@ -45,9 +58,9 @@ export default function InstructorDashboard() {
   );
 
   const difficultyColors = {
-    easy: "bg-green-100 text-green-700 border-green-300",
-    medium: "bg-yellow-100 text-yellow-700 border-yellow-300",
-    hard: "bg-red-100 text-red-700 border-red-300",
+    intro: "bg-blue-100 text-blue-700 border-blue-300",
+    intermediate: "bg-purple-100 text-purple-700 border-purple-300",
+    advanced: "bg-red-100 text-red-700 border-red-300",
   };
 
   const totalTestCases = assignments.reduce((sum, a) => sum + a.testCases.length, 0);
@@ -81,7 +94,18 @@ export default function InstructorDashboard() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
+              className="flex gap-2"
             >
+              {assignments.length === 0 && (
+                <Button 
+                  onClick={handleSeedSamples}
+                  variant="outline" 
+                  className="gap-2 border-blue-200 text-blue-600 hover:bg-blue-50"
+                >
+                  <Download className="h-4 w-4" />
+                  Load Sample Assignments
+                </Button>
+              )}
               <Link href="/instructor/assignments/new">
                 <Button className="gap-2">
                   <Plus className="h-4 w-4" />
@@ -134,7 +158,7 @@ export default function InstructorDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide mb-1">Total Points</p>
-                  <p className="text-4xl font-bold bg-linear-to-r from-green-600 to-green-800 bg-clip-text text-transparent">{assignments.reduce((sum, a) => sum + a.maxScore, 0)}</p>
+                  <p className="text-4xl font-bold bg-linear-to-r from-green-600 to-green-800 bg-clip-text text-transparent">{assignments.reduce((sum, a) => sum + (a.maxScore || 0), 0)}</p>
                 </div>
                 <div className="rounded-xl bg-linear-to-br from-green-600 to-green-500 p-4 shadow-xl shadow-green-500/30">
                   <BarChart3 className="h-7 w-7 text-white" />
@@ -180,62 +204,106 @@ export default function InstructorDashboard() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-4">
             {filteredAssignments.map((assignment, index) => (
               <motion.div
                 key={assignment.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ scale: 1.02 }}
+                transition={{ delay: index * 0.03 }}
               >
-                <Card className="h-full border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-blue-400 transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg mb-2">{assignment.title}</CardTitle>
-                        <div className="flex flex-wrap gap-2">
-                          <Badge className={difficultyColors[assignment.difficulty]}>
-                            {assignment.difficulty}
-                          </Badge>
-                          <Badge variant="outline" className="font-mono text-xs">
-                            {assignment.language}
-                          </Badge>
+                <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-lg hover:shadow-xl hover:border-blue-300 transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-6">
+                      {/* Left: Assignment Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <h3 className="text-xl font-bold text-slate-800 mb-2">
+                              {assignment.title}
+                            </h3>
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              <Badge className={difficultyColors[assignment.difficulty]}>
+                                {assignment.difficulty === 'intro' ? 'Intro Level' : 
+                                 assignment.difficulty === 'intermediate' ? 'Intermediate' : 
+                                 'Advanced'}
+                              </Badge>
+                              <Badge variant="outline" className="font-mono text-xs">
+                                {assignment.language}
+                              </Badge>
+                              <Badge variant="outline" className="text-xs">
+                                {assignment.testCases.length} test cases
+                              </Badge>
+                              <Badge variant="outline" className="text-xs">
+                                {assignment.maxScore || 0} points
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Description with Markdown */}
+                        <div className="prose prose-sm max-w-none text-slate-600 mb-4">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ children }) => <p className="mb-2 leading-relaxed">{children}</p>,
+                              ul: ({ children }) => <ul className="list-disc list-inside mb-2">{children}</ul>,
+                              ol: ({ children }) => <ol className="list-decimal list-inside mb-2">{children}</ol>,
+                              li: ({ children }) => <li className="mb-1">{children}</li>,
+                              strong: ({ children }) => <strong className="font-semibold text-slate-800">{children}</strong>,
+                              em: ({ children }) => <em className="italic">{children}</em>,
+                              code: ({ children }) => <code className="px-1.5 py-0.5 bg-slate-100 text-slate-800 rounded text-xs font-mono">{children}</code>,
+                            }}
+                          >
+                            {assignment.description}
+                          </ReactMarkdown>
+                        </div>
+
+                        <div className="flex items-center gap-4 text-xs text-slate-500">
+                          <span>Created {new Date(assignment.createdAt).toLocaleDateString()}</span>
+                          {assignment.dueDate && (
+                            <span>Due {new Date(assignment.dueDate).toLocaleDateString()}</span>
+                          )}
                         </div>
                       </div>
-                      <div className="relative group">
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreVertical className="h-4 w-4" />
+
+                      {/* Right: Action Buttons */}
+                      <div className="flex flex-col gap-2 shrink-0">
+                        <Link href={`/instructor/assignments/${assignment.id}/grade`}>
+                          <FancyGradeButton size="sm" />
+                        </Link>
+                        
+                        <Link href={`/assignment/${assignment.id}`}>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="w-32 gap-2 border-slate-300 hover:bg-slate-50"
+                          >
+                            <Eye className="h-4 w-4" />
+                            View
+                          </Button>
+                        </Link>
+                        
+                        <Link href={`/instructor/assignments/${assignment.id}/edit`}>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="w-32 gap-2 border-slate-300 hover:bg-slate-50"
+                          >
+                            <FileEdit className="h-4 w-4" />
+                            Edit
+                          </Button>
+                        </Link>
+                        
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="w-32 gap-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+                          onClick={() => handleDelete(assignment.id, assignment.title)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete
                         </Button>
-                        <div className="absolute right-0 top-8 hidden group-hover:block bg-white border rounded-lg shadow-lg py-1 w-40 z-10">
-                          <button
-                            onClick={() => handleDuplicate(assignment)}
-                            className="w-full px-4 py-2 text-left text-sm hover:bg-slate-50 flex items-center gap-2"
-                          >
-                            <Copy className="h-3 w-3" />
-                            Duplicate
-                          </button>
-                          <button
-                            onClick={() => handleDelete(assignment.id, assignment.title)}
-                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-                          >
-                            <Trash2 className="h-3 w-3" />
-                            Delete
-                          </button>
-                        </div>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-slate-600 mb-4 line-clamp-2">
-                      {assignment.description}
-                    </p>
-                    <div className="flex items-center justify-between text-xs text-slate-500 mb-4">
-                      <span>{assignment.testCases.length} test cases</span>
-                      <span>{assignment.maxScore} points</span>
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      Created {new Date(assignment.createdAt).toLocaleDateString()}
                     </div>
                   </CardContent>
                 </Card>

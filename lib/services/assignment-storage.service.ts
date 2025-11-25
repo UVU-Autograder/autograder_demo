@@ -4,7 +4,7 @@ export interface Assignment {
   id: string;
   title: string;
   description: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: 'intro' | 'intermediate' | 'advanced';
   language: string;
   instructions: string;
   starterCode?: string;
@@ -175,7 +175,7 @@ class AssignmentStorageService {
   /**
    * Filter assignments by difficulty
    */
-  filterByDifficulty(difficulty: 'easy' | 'medium' | 'hard'): Assignment[] {
+  filterByDifficulty(difficulty: 'intro' | 'intermediate' | 'advanced'): Assignment[] {
     return this.getAll().filter(a => a.difficulty === difficulty);
   }
 }

@@ -63,7 +63,7 @@ export interface CodeRequirements {
 export interface Assignment {
   id: string;
   title: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: 'intro' | 'intermediate' | 'advanced';
   language: string;
   description: string;
   instructions: string;

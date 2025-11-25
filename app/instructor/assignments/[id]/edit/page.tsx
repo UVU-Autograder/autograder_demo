@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { SUPPORTED_LANGUAGES, DEFAULT_RUBRIC } from '@/lib/constants';
 import type { Assignment, TestCase } from '@/lib/types';
+import { assignmentStorage } from '@/lib/services/assignment-storage.service';
 
 export default function EditAssignment() {
   const router = useRouter();
@@ -32,19 +33,27 @@ export default function EditAssignment() {
   const [rubric, setRubric] = useState(DEFAULT_RUBRIC);
 
   useEffect(() => {
-    async function loadAssignment() {
+    function loadAssignment() {
       try {
-        const res = await fetch(`/api/assignments/${params.id}`);
-        if (!res.ok) throw new Error('Assignment not found');
+        const assignment = assignmentStorage.getById(params.id as string);
+        if (!assignment) {
+          toast.error('Assignment not found');
+          router.push('/instructor');
+          return;
+        }
         
-        const assignment: Assignment = await res.json();
         setTitle(assignment.title);
-        setDifficulty(assignment.difficulty);
+        setDifficulty(assignment.difficulty as 'easy' | 'medium' | 'hard');
         setLanguage(assignment.language);
         setDescription(assignment.description);
         setInstructions(assignment.instructions);
-        setStarterCode(assignment.starterCode);
-        setTestCases(assignment.testCases);
+        setStarterCode(assignment.starterCode || '');
+        setTestCases(assignment.testCases.map((tc, idx) => ({
+          id: idx,
+          input: tc.input,
+          expectedOutput: tc.expectedOutput,
+          isHidden: tc.hidden
+        })));
         setRubric(assignment.rubric);
       } catch (error) {
         toast.error('Failed to load assignment');
@@ -87,23 +96,66 @@ export default function EditAssignment() {
       return;
     }
 
-    toast.success('Assignment updated successfully!', {
-      description: 'Changes have been saved'
-    });
+    try {
+      const existingAssignment = assignmentStorage.getById(params.id as string);
+      if (!existingAssignment) {
+        toast.error('Assignment not found');
+        return;
+      }
 
-    // In a real app, this would update the database
-    setTimeout(() => {
-      router.push('/instructor');
-    }, 1000);
+      // Calculate max score from rubric
+      const maxScore = Object.values(rubric).reduce((sum, item) => sum + item.points, 0);
+
+      // Map difficulty
+      const difficultyMap: Record<string, 'intro' | 'intermediate' | 'advanced'> = {
+        'easy': 'intro',
+        'medium': 'intermediate',
+        'hard': 'advanced'
+      };
+
+      const updatedAssignment = {
+        ...existingAssignment,
+        title,
+        description,
+        difficulty: difficultyMap[difficulty] || 'intro',
+        language,
+        instructions,
+        starterCode,
+        testCases: testCases.map(tc => ({
+          input: tc.input,
+          expectedOutput: tc.expectedOutput,
+          hidden: tc.isHidden
+        })),
+        rubric,
+        maxScore,
+        updatedAt: new Date()
+      };
+
+      assignmentStorage.update(params.id as string, updatedAssignment);
+      
+      toast.success('Assignment updated successfully!', {
+        description: 'Changes have been saved'
+      });
+
+      setTimeout(() => {
+        router.push('/instructor');
+      }, 1000);
+    } catch (error) {
+      toast.error('Failed to update assignment');
+    }
   };
 
   const handleDelete = () => {
     if (confirm('Are you sure you want to delete this assignment? This action cannot be undone.')) {
-      toast.success('Assignment deleted');
-      // In a real app, this would delete from database
-      setTimeout(() => {
-        router.push('/instructor');
-      }, 1000);
+      try {
+        assignmentStorage.delete(params.id as string);
+        toast.success('Assignment deleted');
+        setTimeout(() => {
+          router.push('/instructor');
+        }, 500);
+      } catch (error) {
+        toast.error('Failed to delete assignment');
+      }
     }
   };
 

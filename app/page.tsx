@@ -172,73 +172,127 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Value Props - Subtle Section */}
-      <section className="container mx-auto px-4 pb-12">
-        <div className="max-w-5xl mx-auto">
-          <h3 className="text-2xl font-semibold mb-6 text-center text-slate-700">Why Instructors Love It</h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            <Card className="border-slate-200/50 bg-white/50 backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300">
-              <CardHeader className="pb-3">
-                <div className="h-10 w-10 rounded-lg bg-linear-to-br from-blue-400 to-blue-500 flex items-center justify-center mb-3 shadow-md shadow-blue-400/20">
-                  <Zap className="h-5 w-5 text-white" />
-                </div>
-                <CardTitle className="text-lg">10x Faster Grading</CardTitle>
-                <CardDescription className="text-sm">
-                  Bulk grade 100+ submissions in minutes with AI-powered evaluation
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            <Card className="border-slate-200/50 bg-white/50 backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300">
-              <CardHeader className="pb-3">
-                <div className="h-10 w-10 rounded-lg bg-linear-to-br from-green-400 to-green-500 flex items-center justify-center mb-3 shadow-md shadow-green-400/20">
-                  <CheckCircle2 className="h-5 w-5 text-white" />
-                </div>
-                <CardTitle className="text-lg">Consistent Feedback</CardTitle>
-                <CardDescription className="text-sm">
-                  Every student gets detailed, fair evaluation based on your rubric
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            <Card className="border-slate-200/50 bg-white/50 backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300">
-              <CardHeader className="pb-3">
-                <div className="h-10 w-10 rounded-lg bg-linear-to-br from-purple-400 to-purple-500 flex items-center justify-center mb-3 shadow-md shadow-purple-400/20">
-                  <Award className="h-5 w-5 text-white" />
-                </div>
-                <CardTitle className="text-lg">Beyond Test Cases</CardTitle>
-                <CardDescription className="text-sm">
-                  AI evaluates code quality, efficiency, and style—not just correctness
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats/Features - Minimal */}
+      {/* Platform Highlights */}
       <section className="container mx-auto px-4 pb-16">
-        <div className="max-w-4xl mx-auto bg-white/50 backdrop-blur-sm rounded-2xl p-10 border border-slate-200/50 shadow-md">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="h-12 w-12 rounded-lg bg-linear-to-br from-blue-400 to-blue-500 flex items-center justify-center mx-auto mb-3 shadow-md shadow-blue-400/20">
-                <Clock className="h-6 w-6 text-white" />
-              </div>
-              <div className="text-2xl font-bold text-slate-700 mb-1">Instant</div>
-              <div className="text-sm text-slate-600">Feedback for students</div>
-            </div>
-            <div>
-              <div className="h-12 w-12 rounded-lg bg-linear-to-br from-green-400 to-green-500 flex items-center justify-center mx-auto mb-3 shadow-md shadow-green-400/20">
-                <BarChart3 className="h-6 w-6 text-white" />
-              </div>
-              <div className="text-2xl font-bold text-slate-700 mb-1">4 Metrics</div>
-              <div className="text-sm text-slate-600">Comprehensive evaluation</div>
-            </div>
-            <div>
-              <div className="h-12 w-12 rounded-lg bg-linear-to-br from-purple-400 to-purple-500 flex items-center justify-center mx-auto mb-3 shadow-md shadow-purple-400/20">
-                <Award className="h-6 w-6 text-white" />
-              </div>
-              <div className="text-2xl font-bold text-slate-700 mb-1">AI-Powered</div>
-              <div className="text-sm text-slate-600">Intelligent evaluation</div>
-            </div>
+        <div className="max-w-6xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-center mb-10"
+          >
+            <h3 className="text-3xl font-bold mb-3 bg-linear-to-r from-slate-800 via-blue-800 to-purple-800 bg-clip-text text-transparent">Platform Highlights</h3>
+            <p className="text-slate-600 max-w-2xl mx-auto">Enterprise-grade autograding designed for academic excellence and pedagogical precision</p>
+          </motion.div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-blue-300 transition-all duration-300">
+                <CardContent className="pt-6">
+                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
+                    <Zap className="h-6 w-6 text-white" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-slate-800 mb-2">10x Faster Grading</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Bulk grade 100+ submissions in minutes with AI-powered evaluation and intelligent assessment algorithms
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-green-300 transition-all duration-300">
+                <CardContent className="pt-6">
+                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-green-500 to-green-600 flex items-center justify-center mb-4 shadow-lg shadow-green-500/30">
+                    <CheckCircle2 className="h-6 w-6 text-white" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-slate-800 mb-2">Consistent & Fair Feedback</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Every student receives detailed, equitable evaluation based on your customized rubric criteria
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-purple-300 transition-all duration-300">
+                <CardContent className="pt-6">
+                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg shadow-purple-500/30">
+                    <Award className="h-6 w-6 text-white" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-slate-800 mb-2">Holistic Code Analysis</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    AI evaluates code quality, efficiency, style, and architecture—beyond mere test case correctness
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+            >
+              <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-blue-300 transition-all duration-300">
+                <CardContent className="pt-6">
+                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-cyan-500 to-cyan-600 flex items-center justify-center mb-4 shadow-lg shadow-cyan-500/30">
+                    <Clock className="h-6 w-6 text-white" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-slate-800 mb-2">Instant Feedback Loop</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Real-time evaluation provides immediate, actionable insights to accelerate student learning
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
+            >
+              <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-orange-300 transition-all duration-300">
+                <CardContent className="pt-6">
+                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center mb-4 shadow-lg shadow-orange-500/30">
+                    <BarChart3 className="h-6 w-6 text-white" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-slate-800 mb-2">Comprehensive Metrics</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Four-dimensional assessment covering correctness, quality, efficiency, and edge case handling
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0 }}
+            >
+              <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-indigo-300 transition-all duration-300">
+                <CardContent className="pt-6">
+                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30">
+                    <Code2 className="h-6 w-6 text-white" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-slate-800 mb-2">Multi-Language Support</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Python, Java, C++, JavaScript—unified grading experience across diverse programming paradigms
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
         </div>
       </section>
