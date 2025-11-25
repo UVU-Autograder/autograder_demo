@@ -1,9 +1,10 @@
-import { bubbleSortAssignment } from './bubble-sort';
-import { insertionSortAssignment } from './insertion-sort';
-import { mergeSortAssignment } from './merge-sort';
+// Sample assignments - loaded from JSON files
+import bubbleSortData from './bubble-sort.json';
+import insertionSortData from './insertion-sort.json';
+import mergeSortData from './merge-sort.json';
 
 export const sampleAssignments = [
-  bubbleSortAssignment,
-  insertionSortAssignment,
-  mergeSortAssignment,
+  bubbleSortData,
+  insertionSortData,
+  mergeSortData,
 ];
