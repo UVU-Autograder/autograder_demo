@@ -4,7 +4,6 @@ export interface Assignment {
   id: string;
   title: string;
   description: string;
-  difficulty: 'intro' | 'intermediate' | 'advanced';
   language: string;
   instructions: string;
   starterCode?: string;
@@ -16,6 +15,8 @@ export interface Assignment {
   createdBy?: string;
   dueDate?: Date;
   maxScore: number;
+  isSample?: boolean;
+  tags?: string[];
 }
 
 export interface TestCase {
@@ -173,10 +174,41 @@ class AssignmentStorageService {
   }
 
   /**
-   * Filter assignments by difficulty
+   * Filter sample assignments
    */
-  filterByDifficulty(difficulty: 'intro' | 'intermediate' | 'advanced'): Assignment[] {
-    return this.getAll().filter(a => a.difficulty === difficulty);
+  filterSamples(): Assignment[] {
+    return this.getAll().filter(a => a.isSample === true);
+  }
+
+  /**
+   * Filter by tags
+   */
+  filterByTag(tag: string): Assignment[] {
+    return this.getAll().filter(a => 
+      a.tags?.some(t => t.toLowerCase() === tag.toLowerCase())
+    );
+  }
+
+  /**
+   * Initialize with sample assignments on first load
+   */
+  initializeWithSamples(samples: Omit<Assignment, 'id' | 'createdAt' | 'updatedAt'>[]): void {
+    if (typeof window === 'undefined') return;
+    
+    const existing = this.getAll();
+    if (existing.length === 0) {
+      const now = new Date();
+      const assignmentsWithIds = samples.map((assignment, index) => ({
+        ...assignment,
+        id: `sample-${Date.now()}-${index}`,
+        createdAt: now,
+        updatedAt: now,
+        isSample: true,
+        maxScore: 100,
+      }));
+      
+      this.saveAll(assignmentsWithIds);
+    }
   }
 }
 

@@ -8,33 +8,79 @@ export const sampleAssignments: Omit<Assignment, 'id' | 'createdAt' | 'updatedAt
   // INTRO LEVEL ASSIGNMENTS (Weeks 1-3)
   {
     title: "Hello World Personalized",
-    difficulty: "intro",
     language: "python",
-    description: "Learn basic input/output operations by creating a personalized greeting program.",
-    instructions: `# Assignment: Personalized Hello World
+    description: "Master the fundamentals of input/output operations by creating an interactive greeting program that responds to user input with personalized messages.",
+    instructions: `# 👋 Assignment: Personalized Hello World
 
-## Learning Objectives
-- Understand basic input() and print() functions
-- Practice string concatenation
-- Use f-strings for formatted output
+## 🎯 Learning Objectives
+By completing this assignment, you will:
+- Master basic input() and print() functions in Python
+- Practice string concatenation and variable assignment
+- Learn f-strings (formatted string literals) for elegant output
+- Understand the flow of interactive console programs
 
-## Requirements
-1. Prompt the user for their first name
-2. Prompt the user for their favorite color
-3. Print a personalized greeting that includes both pieces of information
+## 📋 Requirements
 
-## Example Output
-\`\`\`
+### Core Functionality
+1. First Prompt: Ask the user for their first name using a clear prompt message
+2. Second Prompt: Ask the user for their favorite color
+3. Personalized Output: Display a greeting that incorporates both pieces of information
+4. Formatting: Use f-strings for clean, readable string formatting
+
+### Input/Output Specification
+\\\`\\\`\\\`python
+# Input Format:
+What is your first name? [user enters name]
+What is your favorite color? [user enters color]
+
+# Output Format:
+Hello, [name]! I love the color [color] too!
+\\\`\\\`\\\`
+
+## 💡 Example Interaction
+
+Example 1:
+\\\`\\\`\\\`
 What is your first name? Alice
 What is your favorite color? blue
 Hello, Alice! I love the color blue too!
-\`\`\`
+\\\`\\\`\\\`
 
-## Grading Criteria
-- Correctness: Program runs without errors (40 pts)
-- Input Handling: Properly prompts for both inputs (20 pts)
-- Output Format: Follows example format (20 pts)
-- Code Quality: Clean, readable code with comments (20 pts)`,
+Example 2:
+\\\`\\\`\\\`
+What is your first name? Mohammed
+What is your favorite color? green
+Hello, Mohammed! I love the color green too!
+\\\`\\\`\\\`
+
+## 📊 Grading Rubric (100 points total)
+
+| Criteria | Points | Description |
+|----------|--------|-------------|
+| Correctness | 40 pts | Program executes without errors and produces expected output |
+| Input Handling | 20 pts | Both prompts display correctly and capture user input |
+| Output Format | 20 pts | Output matches the exact format specified with proper punctuation |
+| Code Quality | 20 pts | Clean code with comments, proper naming, follows PEP 8 style |
+
+## ✅ Success Checklist
+- Program prompts for first name
+- Program prompts for favorite color
+- Output includes both pieces of information
+- Output format matches examples exactly
+- Code includes header comment with name and date
+- Variables have descriptive names
+- Code is properly indented
+
+## 🚀 Getting Started
+1. Read through the starter code carefully
+2. Replace the TODO comments with working code
+3. Test with multiple different inputs
+4. Verify output format matches exactly
+
+## 💭 Reflection Questions (Optional)
+- Why use f-strings instead of string concatenation with +?
+- How would you modify the program to ask for 3 pieces of information?
+- What happens if the user enters a number instead of a name?`,
     starterCode: `# Personalized Hello World
 # Your Name: [Student Name]
 # Date: [Today's Date]
@@ -92,7 +138,6 @@ if __name__ == "__main__":
 
   {
     title: "Simple Calculator",
-    difficulty: "intro",
     language: "python",
     description: "Build a basic calculator that performs arithmetic operations on two numbers.",
     instructions: `# Assignment: Simple Calculator
@@ -191,7 +236,6 @@ if __name__ == "__main__":
   // INTERMEDIATE LEVEL ASSIGNMENTS (Weeks 4-7)
   {
     title: "Grade Calculator with Lists",
-    difficulty: "intermediate",
     language: "python",
     description: "Process a list of student scores to calculate statistics and assign letter grades.",
     instructions: `# Assignment: Grade Calculator
@@ -311,7 +355,6 @@ if __name__ == "__main__":
 
   {
     title: "Password Validator",
-    difficulty: "intermediate",
     language: "python",
     description: "Create a function that validates passwords based on security requirements.",
     instructions: `# Assignment: Password Validator
@@ -444,7 +487,6 @@ if __name__ == "__main__":
   // ADVANCED LEVEL ASSIGNMENTS (Weeks 8+)
   {
     title: "Student Records Manager (Dictionary & File I/O)",
-    difficulty: "advanced",
     language: "python",
     description: "Build a system to manage student records using dictionaries and file operations.",
     instructions: `# Assignment: Student Records Manager
@@ -581,7 +623,6 @@ if __name__ == "__main__":
 
   {
     title: "Recursive Fibonacci with Memoization",
-    difficulty: "advanced",
     language: "python",
     description: "Implement Fibonacci sequence using recursion and optimize with memoization.",
     instructions: `# Assignment: Fibonacci with Memoization
@@ -738,7 +779,6 @@ if __name__ == "__main__":
 
   {
     title: "Text File Word Frequency Analyzer",
-    difficulty: "advanced",
     language: "python",
     description: "Analyze text files to count word frequencies and generate statistics.",
     instructions: `# Assignment: Word Frequency Analyzer

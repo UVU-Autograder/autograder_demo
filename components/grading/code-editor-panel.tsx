@@ -52,39 +52,40 @@ export function CodeEditorPanel({
           )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
-        {!code ? (
-          <div
-            {...getRootProps()}
-            className={`m-4 border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
-              isDragActive
-                ? "border-blue-500 bg-blue-50/50"
-                : "border-slate-300 hover:border-blue-400 hover:bg-slate-50/50"
+      <CardContent className="space-y-3">
+        {/* File Upload Zone */}
+        <div
+          {...getRootProps()}
+          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+            isDragActive
+              ? "border-blue-500 bg-blue-50/50"
+              : "border-slate-300 hover:border-blue-400 hover:bg-slate-50/50"
+          }`}
+        >
+          <input {...getInputProps()} />
+          <Upload
+            className={`h-8 w-8 mx-auto mb-2 ${
+              isDragActive ? "text-blue-500" : "text-slate-400"
             }`}
-          >
-            <input {...getInputProps()} />
-            <Upload
-              className={`h-12 w-12 mx-auto mb-4 ${
-                isDragActive ? "text-blue-500" : "text-slate-400"
-              }`}
-            />
-            <p className="text-slate-600 font-medium mb-2">
-              {isDragActive ? "Drop the file here" : "Drag & drop a code file here"}
-            </p>
-            <p className="text-sm text-slate-500">
-              or click to browse (.py, .java, .cpp, .js, .ts)
-            </p>
-          </div>
-        ) : (
-          <div className="border-t border-slate-200">
-            <CodeEditor
-              value={code}
-              onChange={onCodeChange}
-              language={language}
-              height="500px"
-            />
-          </div>
-        )}
+          />
+          <p className="text-slate-600 font-medium text-sm mb-1">
+            {isDragActive ? "Drop the file here" : "Drag & drop a code file"}
+          </p>
+          <p className="text-xs text-slate-500">
+            or click to browse (.py, .java, .cpp, .js, .ts)
+          </p>
+        </div>
+
+        {/* Code Editor - Always Visible */}
+        <div className="border border-slate-200 rounded-lg overflow-hidden">
+          <CodeEditor
+            value={code}
+            onChange={onCodeChange}
+            language={language}
+            height="500px"
+            placeholder={`# Paste your ${language} code here or upload a file above...\n\ndef solution():\n    pass`}
+          />
+        </div>
       </CardContent>
     </Card>
   );

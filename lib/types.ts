@@ -6,6 +6,10 @@ export interface TestCase {
 }
 
 export interface Rubric {
+  [key: string]: {
+    points: number;
+    description: string;
+  };
   correctness: {
     points: number;
     description: string;
@@ -63,13 +67,14 @@ export interface CodeRequirements {
 export interface Assignment {
   id: string;
   title: string;
-  difficulty: 'intro' | 'intermediate' | 'advanced';
   language: string;
   description: string;
   instructions: string;
   starterCode: string;
   testCases: TestCase[];
   rubric: Rubric;
+  isSample?: boolean; // Flag for sample assignments
+  tags?: string[]; // Custom tags for categorization
   // New fields for enhanced functionality
   evaluationMethod?: EvaluationMethod;
   codeRequirements?: CodeRequirements;

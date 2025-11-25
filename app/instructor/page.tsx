@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { assignmentStorage, Assignment } from "@/lib/services/assignment-storage.service";
-import { seedSampleAssignments } from "@/lib/data/sample-assignments";
+import { initializeSampleAssignments } from "@/lib/data/all-sample-assignments";
 import ReactMarkdown from "react-markdown";
 
 export default function InstructorDashboard() {
@@ -18,21 +18,13 @@ export default function InstructorDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
+    // Auto-load sample assignments on first visit
+    initializeSampleAssignments();
     loadAssignments();
   }, []);
 
   const loadAssignments = () => {
     setAssignments(assignmentStorage.getAll());
-  };
-
-  const handleSeedSamples = () => {
-    const count = seedSampleAssignments();
-    if (count && count > 0) {
-      loadAssignments();
-      toast.success(`Added ${count} sample assignments!`);
-    } else {
-      toast.info("Sample assignments already exist");
-    }
   };
 
   const handleDelete = (id: string, title: string) => {
@@ -57,12 +49,6 @@ export default function InstructorDashboard() {
     a.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const difficultyColors = {
-    intro: "bg-blue-100 text-blue-700 border-blue-300",
-    intermediate: "bg-purple-100 text-purple-700 border-purple-300",
-    advanced: "bg-red-100 text-red-700 border-red-300",
-  };
-
   const totalTestCases = assignments.reduce((sum, a) => sum + a.testCases.length, 0);
 
   return (
@@ -81,8 +67,8 @@ export default function InstructorDashboard() {
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               </Link>
-              <div className="rounded-lg bg-linear-to-br from-blue-600 to-blue-500 p-2 shadow-lg shadow-blue-500/50">
-                <Code2 className="h-6 w-6 text-white" />
+              <div className="rounded-lg bg-blue-100/50 backdrop-blur p-2 border-2 border-blue-400/30\">
+                <Code2 className="h-6 w-6 text-blue-600" strokeWidth={1.5} />
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -96,16 +82,6 @@ export default function InstructorDashboard() {
               animate={{ opacity: 1, x: 0 }}
               className="flex gap-2"
             >
-              {assignments.length === 0 && (
-                <Button 
-                  onClick={handleSeedSamples}
-                  variant="outline" 
-                  className="gap-2 border-blue-200 text-blue-600 hover:bg-blue-50"
-                >
-                  <Download className="h-4 w-4" />
-                  Load Sample Assignments
-                </Button>
-              )}
               <Link href="/instructor/assignments/new">
                 <Button className="gap-2">
                   <Plus className="h-4 w-4" />
@@ -132,8 +108,8 @@ export default function InstructorDashboard() {
                   <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide mb-1">Total Assignments</p>
                   <p className="text-4xl font-bold bg-linear-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">{assignments.length}</p>
                 </div>
-                <div className="rounded-xl bg-linear-to-br from-blue-600 to-blue-500 p-4 shadow-xl shadow-blue-500/30">
-                  <BookOpen className="h-7 w-7 text-white" />
+                <div className="rounded-xl bg-blue-100/50 backdrop-blur p-4 border-2 border-blue-400/30">
+                  <BookOpen className="h-7 w-7 text-blue-600" strokeWidth={1.5} />
                 </div>
               </div>
             </CardContent>
@@ -146,8 +122,8 @@ export default function InstructorDashboard() {
                   <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide mb-1">Total Test Cases</p>
                   <p className="text-4xl font-bold bg-linear-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">{totalTestCases}</p>
                 </div>
-                <div className="rounded-xl bg-linear-to-br from-purple-600 to-purple-500 p-4 shadow-xl shadow-purple-500/30">
-                  <Code2 className="h-7 w-7 text-white" />
+                <div className="rounded-xl bg-purple-100/50 backdrop-blur p-4 border-2 border-purple-400/30">
+                  <Code2 className="h-7 w-7 text-purple-600" strokeWidth={1.5} />
                 </div>
               </div>
             </CardContent>
@@ -160,8 +136,8 @@ export default function InstructorDashboard() {
                   <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide mb-1">Total Points</p>
                   <p className="text-4xl font-bold bg-linear-to-r from-green-600 to-green-800 bg-clip-text text-transparent">{assignments.reduce((sum, a) => sum + (a.maxScore || 0), 0)}</p>
                 </div>
-                <div className="rounded-xl bg-linear-to-br from-green-600 to-green-500 p-4 shadow-xl shadow-green-500/30">
-                  <BarChart3 className="h-7 w-7 text-white" />
+                <div className="rounded-xl bg-green-100/50 backdrop-blur p-4 border-2 border-green-400/30">
+                  <BarChart3 className="h-7 w-7 text-green-600" strokeWidth={1.5} />
                 </div>
               </div>
             </CardContent>
@@ -188,7 +164,7 @@ export default function InstructorDashboard() {
         {filteredAssignments.length === 0 ? (
           <Card className="text-center py-12 border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl shadow-slate-200/50">
             <CardContent>
-              <BookOpen className="h-16 w-16 text-slate-300 mx-auto mb-4" />
+              <BookOpen className="h-16 w-16 text-slate-400 mx-auto mb-4" strokeWidth={1.5} />
               <h3 className="text-xl font-semibold text-slate-700 mb-2">
                 {searchQuery ? "No assignments match your search" : "No assignments yet"}
               </h3>
@@ -223,11 +199,11 @@ export default function InstructorDashboard() {
                               {assignment.title}
                             </h3>
                             <div className="flex flex-wrap gap-2 mb-3">
-                              <Badge className={difficultyColors[assignment.difficulty]}>
-                                {assignment.difficulty === 'intro' ? 'Intro Level' : 
-                                 assignment.difficulty === 'intermediate' ? 'Intermediate' : 
-                                 'Advanced'}
-                              </Badge>
+                              {assignment.isSample && (
+                                <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200">
+                                  Sample
+                                </Badge>
+                              )}
                               <Badge variant="outline" className="font-mono text-xs">
                                 {assignment.language}
                               </Badge>
@@ -237,6 +213,11 @@ export default function InstructorDashboard() {
                               <Badge variant="outline" className="text-xs">
                                 {assignment.maxScore || 0} points
                               </Badge>
+                              {assignment.tags && assignment.tags.map(tag => (
+                                <Badge key={tag} variant="outline" className="text-xs bg-purple-50 text-purple-700">
+                                  {tag}
+                                </Badge>
+                              ))}
                             </div>
                           </div>
                         </div>

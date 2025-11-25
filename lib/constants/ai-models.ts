@@ -1,67 +1,33 @@
 export interface AIModel {
   id: string;
   name: string;
-  provider: string;
-  description: string;
-  icon: string;
-  speed: 'Very Fast' | 'Fast' | 'Medium' | 'Slow';
-  cost: '$' | '$$' | '$$$';
-  contextWindow: string;
-  recommended?: boolean;
 }
 
 export const AVAILABLE_MODELS: AIModel[] = [
   {
-    id: 'anthropic/claude-3.5-sonnet',
-    name: 'Claude 3.5 Sonnet',
-    provider: 'Anthropic',
-    description: 'Best for detailed code analysis and comprehensive feedback',
-    icon: '🧠',
-    speed: 'Fast',
-    cost: '$$',
-    contextWindow: '200K',
-    recommended: true,
+    id: 'deepseek/deepseek-chat-v3.1:free',
+    name: 'DeepSeek V3.1 (Free) ⭐',
   },
   {
-    id: 'openai/gpt-4-turbo',
-    name: 'GPT-4 Turbo',
-    provider: 'OpenAI',
-    description: 'Excellent for comprehensive feedback and code understanding',
-    icon: '🤖',
-    speed: 'Medium',
-    cost: '$$$',
-    contextWindow: '128K',
+    id: 'qwen/qwen3-coder:free',
+    name: 'Qwen3 Coder (Free)',
   },
   {
-    id: 'google/gemini-pro-1.5',
-    name: 'Gemini Pro 1.5',
-    provider: 'Google',
-    description: 'Fast and accurate grading with good code analysis',
-    icon: '✨',
-    speed: 'Very Fast',
-    cost: '$',
-    contextWindow: '1M',
+    id: 'google/gemini-2.0-flash-exp:free',
+    name: 'Gemini 2.0 Flash (Free)',
   },
   {
-    id: 'meta-llama/llama-3.1-70b-instruct',
-    name: 'Llama 3.1 70B',
-    provider: 'Meta',
-    description: 'Open-source, cost-effective with solid performance',
-    icon: '🦙',
-    speed: 'Fast',
-    cost: '$',
-    contextWindow: '128K',
+    id: 'deepseek/deepseek-r1-0528:free',
+    name: 'DeepSeek R1 Reasoning (Free)',
   },
   {
-    id: 'openai/gpt-4o',
-    name: 'GPT-4o',
-    provider: 'OpenAI',
-    description: 'Latest multimodal model with excellent reasoning',
-    icon: '🚀',
-    speed: 'Fast',
-    cost: '$$',
-    contextWindow: '128K',
+    id: 'x-ai/grok-4.1-fast:free',
+    name: 'Grok 4.1 Fast (Free)',
+  },
+  {
+    id: 'mistralai/mistral-7b-instruct:free',
+    name: 'Mistral 7B (Free)',
   },
 ];
 
-export const DEFAULT_MODEL = AVAILABLE_MODELS[0]; // Claude 3.5 Sonnet
+export const DEFAULT_MODEL = AVAILABLE_MODELS[0];

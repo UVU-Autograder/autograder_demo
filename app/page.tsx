@@ -18,8 +18,8 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center gap-3"
             >
-              <div className="rounded-xl bg-linear-to-br from-blue-600 to-purple-600 p-2.5 shadow-lg shadow-blue-500/30">
-                <Code2 className="h-6 w-6 text-white" />
+              <div className="rounded-xl bg-blue-100/50 backdrop-blur p-2.5 border-2 border-blue-400/30">
+                <Code2 className="h-6 w-6 text-blue-600" strokeWidth={1.5} />
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">UVU Autograder</h1>
@@ -65,8 +65,8 @@ export default function Home() {
               <Link href="/instructor/assignments/new">
                 <Card className="h-full cursor-pointer border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-2xl shadow-blue-500/20 hover:shadow-3xl hover:shadow-blue-500/30 hover:border-blue-400 transition-all duration-300">
                   <CardHeader className="pb-4">
-                    <div className="h-16 w-16 rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-5 shadow-xl shadow-blue-500/40">
-                      <Plus className="h-8 w-8 text-white" />
+                    <div className="h-16 w-16 rounded-2xl bg-blue-100/50 backdrop-blur border-2 border-blue-400/30 flex items-center justify-center mb-5">
+                      <Plus className="h-8 w-8 text-blue-600" strokeWidth={2} />
                     </div>
                     <CardTitle className="text-2xl mb-3">Create Assignment</CardTitle>
                     <CardDescription className="text-base leading-relaxed">
@@ -103,8 +103,8 @@ export default function Home() {
               <Link href="/instructor">
                 <Card className="h-full cursor-pointer border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-2xl shadow-purple-500/20 hover:shadow-3xl hover:shadow-purple-500/30 hover:border-purple-400 transition-all duration-300">
                   <CardHeader className="pb-4">
-                    <div className="h-16 w-16 rounded-2xl bg-linear-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-5 shadow-xl shadow-purple-500/40">
-                      <FileText className="h-8 w-8 text-white" />
+                    <div className="h-16 w-16 rounded-2xl bg-purple-100/50 backdrop-blur border-2 border-purple-400/30 flex items-center justify-center mb-5">
+                      <FileText className="h-8 w-8 text-purple-600" strokeWidth={2} />
                     </div>
                     <CardTitle className="text-2xl mb-3">Manage Assignments</CardTitle>
                     <CardDescription className="text-base leading-relaxed">
@@ -141,8 +141,8 @@ export default function Home() {
               <Link href="/bulk">
                 <Card className="h-full cursor-pointer border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-2xl shadow-green-500/20 hover:shadow-3xl hover:shadow-green-500/30 hover:border-green-400 transition-all duration-300">
                   <CardHeader className="pb-4">
-                    <div className="h-16 w-16 rounded-2xl bg-linear-to-br from-green-500 to-green-600 flex items-center justify-center mb-5 shadow-xl shadow-green-500/40">
-                      <Upload className="h-8 w-8 text-white" />
+                    <div className="h-16 w-16 rounded-2xl bg-green-100/50 backdrop-blur border-2 border-green-400/30 flex items-center justify-center mb-5">
+                      <Upload className="h-8 w-8 text-green-600" strokeWidth={2} />
                     </div>
                     <CardTitle className="text-2xl mb-3">Grade Submissions</CardTitle>
                     <CardDescription className="text-base leading-relaxed">
@@ -193,8 +193,8 @@ export default function Home() {
             >
               <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-blue-300 transition-all duration-300">
                 <CardContent className="pt-6">
-                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
-                    <Zap className="h-6 w-6 text-white" />
+                  <div className="h-12 w-12 rounded-xl bg-blue-100/50 backdrop-blur border-2 border-blue-400/30 flex items-center justify-center mb-4">
+                    <Zap className="h-6 w-6 text-blue-600" strokeWidth={2} />
                   </div>
                   <h4 className="text-lg font-semibold text-slate-800 mb-2">10x Faster Grading</h4>
                   <p className="text-sm text-slate-600 leading-relaxed">
@@ -211,8 +211,8 @@ export default function Home() {
             >
               <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-green-300 transition-all duration-300">
                 <CardContent className="pt-6">
-                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-green-500 to-green-600 flex items-center justify-center mb-4 shadow-lg shadow-green-500/30">
-                    <CheckCircle2 className="h-6 w-6 text-white" />
+                  <div className="h-12 w-12 rounded-xl bg-green-100/50 backdrop-blur border-2 border-green-400/30 flex items-center justify-center mb-4">
+                    <CheckCircle2 className="h-6 w-6 text-green-600" strokeWidth={2} />
                   </div>
                   <h4 className="text-lg font-semibold text-slate-800 mb-2">Consistent & Fair Feedback</h4>
                   <p className="text-sm text-slate-600 leading-relaxed">
@@ -229,8 +229,8 @@ export default function Home() {
             >
               <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-purple-300 transition-all duration-300">
                 <CardContent className="pt-6">
-                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg shadow-purple-500/30">
-                    <Award className="h-6 w-6 text-white" />
+                  <div className="h-12 w-12 rounded-xl bg-purple-100/50 backdrop-blur border-2 border-purple-400/30 flex items-center justify-center mb-4">
+                    <Award className="h-6 w-6 text-purple-600" strokeWidth={2} />
                   </div>
                   <h4 className="text-lg font-semibold text-slate-800 mb-2">Holistic Code Analysis</h4>
                   <p className="text-sm text-slate-600 leading-relaxed">
@@ -247,8 +247,8 @@ export default function Home() {
             >
               <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-blue-300 transition-all duration-300">
                 <CardContent className="pt-6">
-                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-cyan-500 to-cyan-600 flex items-center justify-center mb-4 shadow-lg shadow-cyan-500/30">
-                    <Clock className="h-6 w-6 text-white" />
+                  <div className="h-12 w-12 rounded-xl bg-cyan-100/50 backdrop-blur border-2 border-cyan-400/30 flex items-center justify-center mb-4">
+                    <Clock className="h-6 w-6 text-cyan-600" strokeWidth={2} />
                   </div>
                   <h4 className="text-lg font-semibold text-slate-800 mb-2">Instant Feedback Loop</h4>
                   <p className="text-sm text-slate-600 leading-relaxed">
@@ -265,8 +265,8 @@ export default function Home() {
             >
               <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-orange-300 transition-all duration-300">
                 <CardContent className="pt-6">
-                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center mb-4 shadow-lg shadow-orange-500/30">
-                    <BarChart3 className="h-6 w-6 text-white" />
+                  <div className="h-12 w-12 rounded-xl bg-orange-100/50 backdrop-blur border-2 border-orange-400/30 flex items-center justify-center mb-4">
+                    <BarChart3 className="h-6 w-6 text-orange-600" strokeWidth={2} />
                   </div>
                   <h4 className="text-lg font-semibold text-slate-800 mb-2">Comprehensive Metrics</h4>
                   <p className="text-sm text-slate-600 leading-relaxed">
@@ -283,8 +283,8 @@ export default function Home() {
             >
               <Card className="h-full border-slate-200/50 bg-white/60 backdrop-blur-lg shadow-lg hover:shadow-xl hover:border-indigo-300 transition-all duration-300">
                 <CardContent className="pt-6">
-                  <div className="h-12 w-12 rounded-xl bg-linear-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30">
-                    <Code2 className="h-6 w-6 text-white" />
+                  <div className="h-12 w-12 rounded-xl bg-indigo-100/50 backdrop-blur border-2 border-indigo-400/30 flex items-center justify-center mb-4">
+                    <Code2 className="h-6 w-6 text-indigo-600" strokeWidth={2} />
                   </div>
                   <h4 className="text-lg font-semibold text-slate-800 mb-2">Multi-Language Support</h4>
                   <p className="text-sm text-slate-600 leading-relaxed">
