@@ -22,6 +22,9 @@ export default function InstructorDashboard() {
     const oldKey = 'autograder_assignments';
     localStorage.removeItem(oldKey);
     
+    console.log('Sample assignments from JSON:', sampleAssignments);
+    console.log('First assignment instructions length:', sampleAssignments[0]?.instructions?.length);
+    
     assignmentStorage.initializeWithSamples(sampleAssignments);
     loadAssignments();
   }, []);

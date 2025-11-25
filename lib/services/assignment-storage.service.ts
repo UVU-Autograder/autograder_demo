@@ -193,7 +193,10 @@ class AssignmentStorageService {
     if (typeof window === 'undefined') return;
     
     const existing = this.getAll();
+    console.log('Existing assignments:', existing.length);
+    
     if (existing.length === 0) {
+      console.log('Initializing with samples:', samples);
       const now = new Date();
       const assignmentsWithIds = samples.map((assignment, index) => ({
         ...assignment,
@@ -201,8 +204,12 @@ class AssignmentStorageService {
         createdAt: now,
         updatedAt: now,
         isSample: true,
-        maxScore: 100,
+        maxScore: assignment.maxScore || 100,
       }));
+      
+      console.log('Assignments with IDs:', assignmentsWithIds);
+      console.log('First assignment has instructions:', !!assignmentsWithIds[0]?.instructions);
+      console.log('Instructions length:', assignmentsWithIds[0]?.instructions?.length);
       
       this.saveAll(assignmentsWithIds);
     }
