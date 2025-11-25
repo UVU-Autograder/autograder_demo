@@ -61,6 +61,10 @@ export default function GradeIndividualPage() {
     const assignmentData = assignmentStorage.getById(params.id as string);
     if (assignmentData) {
       setAssignment(assignmentData);
+      // Load starter code right here
+      if (assignmentData.starterCode) {
+        setCode(assignmentData.starterCode);
+      }
     } else {
       toast.error("Assignment not found");
       router.push("/instructor");
@@ -136,13 +140,15 @@ export default function GradeIndividualPage() {
               <div>
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl font-bold text-slate-800">{assignment.title}</h1>
-                  <Badge className={DIFFICULTY_COLORS[assignment.difficulty]}>
-                    {assignment.difficulty === "intro"
-                      ? "Intro Level"
-                      : assignment.difficulty === "intermediate"
-                      ? "Intermediate"
-                      : "Advanced"}
-                  </Badge>
+                  {assignment.tags && assignment.tags.length > 0 && (
+                    <>
+                      {assignment.tags.map(tag => (
+                        <Badge key={tag} variant="outline" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </>
+                  )}
                   <Badge variant="outline" className="font-mono">
                     {assignment.language}
                   </Badge>
@@ -163,26 +169,12 @@ export default function GradeIndividualPage() {
             style={{ width: `${leftWidth}%` }}
           >
             <div className="max-w-4xl space-y-6">
-              {/* Assignment Description Only */}
-              <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl">
-                <CardHeader>
-                  <CardTitle className="text-lg">Assignment Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-sm">
-                  <div>
-                    <span className="font-semibold text-slate-700">Description:</span>
-                    <div className="text-slate-600 mt-2 prose prose-sm max-w-none">
-                      {assignment.description}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 pt-2 border-t border-slate-200/50">
-                    <div>
-                      <span className="font-semibold text-slate-700">Max Score:</span>
-                      <span className="ml-2 text-slate-600">{assignment.maxScore} pts</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Assignment Details with Full Instructions */}
+              <AssignmentDetailsCard
+                assignment={assignment}
+                showTestCases={showTestCases}
+                onToggleTestCases={() => setShowTestCases(!showTestCases)}
+              />
 
               <AIGradingPanel
                 aiSettings={aiSettings}

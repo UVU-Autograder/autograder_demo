@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import type { Assignment, GradingResult, TestResult } from '@/lib/types';
 import { TestResultListSkeleton, GradingFeedbackSkeleton } from '@/components/skeletons/grading-skeleton';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function AssignmentPage() {
   const params = useParams();
@@ -171,6 +172,7 @@ export default function AssignmentPage() {
           <div className="max-w-2xl">
             <div className="prose prose-slate max-w-none mb-8">
               <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
                 components={{
                   h1: ({ children }) => <h1 className="text-3xl font-bold mt-8 mb-4 text-slate-900">{children}</h1>,
                   h2: ({ children }) => <h2 className="text-2xl font-bold mt-6 mb-3 text-slate-900">{children}</h2>,
@@ -182,19 +184,19 @@ export default function AssignmentPage() {
                   code: ({ children, className }) => {
                     const isBlock = className?.includes('language-');
                     if (isBlock) {
-                      return <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto mb-4 text-sm"><code>{children}</code></pre>;
+                      return <code className="block bg-slate-100 text-slate-800 p-4 rounded-lg overflow-x-auto mb-4 text-sm font-mono whitespace-pre border border-slate-300">{children}</code>;
                     }
                     return <code className="px-2 py-1 bg-slate-100 text-slate-800 rounded text-sm font-mono">{children}</code>;
                   },
-                  pre: ({ children }) => <div className="mb-4">{children}</div>,
+                  pre: ({ children }) => <div className="bg-slate-100 p-4 rounded-lg overflow-x-auto mb-4 text-sm font-mono whitespace-pre border border-slate-300">{children}</div>,
                   strong: ({ children }) => <strong className="font-semibold text-slate-900">{children}</strong>,
                   em: ({ children }) => <em className="italic">{children}</em>,
-                  table: ({ children }) => <table className="min-w-full divide-y divide-slate-200 mb-4">{children}</table>,
-                  thead: ({ children }) => <thead className="bg-slate-50">{children}</thead>,
-                  tbody: ({ children }) => <tbody className="bg-white divide-y divide-slate-200">{children}</tbody>,
+                  table: ({ children }) => <div className="overflow-x-auto mb-4"><table className="min-w-full border-2 border-slate-400">{children}</table></div>,
+                  thead: ({ children }) => <thead className="bg-slate-100 border-b-2 border-slate-400">{children}</thead>,
+                  tbody: ({ children }) => <tbody className="bg-white">{children}</tbody>,
                   tr: ({ children }) => <tr>{children}</tr>,
-                  th: ({ children }) => <th className="px-4 py-2 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">{children}</th>,
-                  td: ({ children }) => <td className="px-4 py-2 text-sm text-slate-700">{children}</td>,
+                  th: ({ children }) => <th className="px-4 py-2 text-left text-xs font-bold text-slate-800 uppercase tracking-wider border border-slate-400 bg-slate-100">{children}</th>,
+                  td: ({ children }) => <td className="px-4 py-2 text-sm text-slate-700 border border-slate-300">{children}</td>,
                   blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-slate-600 my-4">{children}</blockquote>,
                 }}
               >

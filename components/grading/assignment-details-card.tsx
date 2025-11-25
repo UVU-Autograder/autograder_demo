@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Assignment } from "@/lib/services/assignment-storage.service";
@@ -26,6 +27,7 @@ export function AssignmentDetailsCard({
           <span className="font-semibold text-slate-700 mb-3 block">Assignment Instructions:</span>
           <div className="text-slate-600 prose prose-sm max-w-none">
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
               components={{
                 h1: ({ children }) => <h1 className="text-xl font-bold mt-4 mb-2 text-slate-900">{children}</h1>,
                 h2: ({ children }) => <h2 className="text-lg font-bold mt-3 mb-2 text-slate-900">{children}</h2>,
@@ -39,17 +41,17 @@ export function AssignmentDetailsCard({
                 code: ({ children, className }) => {
                   const isBlock = className?.includes('language-');
                   if (isBlock) {
-                    return <pre className="bg-slate-900 text-slate-100 p-3 rounded-md overflow-x-auto mb-2 text-xs"><code>{children}</code></pre>;
+                    return <code className="block bg-slate-100 text-slate-800 p-3 rounded-md overflow-x-auto mb-3 text-xs font-mono whitespace-pre border border-slate-300">{children}</code>;
                   }
                   return <code className="px-1.5 py-0.5 bg-slate-100 text-slate-800 rounded text-xs font-mono">{children}</code>;
                 },
-                pre: ({ children }) => <div className="mb-2">{children}</div>,
-                table: ({ children }) => <table className="min-w-full text-xs divide-y divide-slate-200 mb-2">{children}</table>,
-                thead: ({ children }) => <thead className="bg-slate-50">{children}</thead>,
-                tbody: ({ children }) => <tbody className="divide-y divide-slate-100">{children}</tbody>,
+                pre: ({ children }) => <div className="bg-slate-100 p-3 rounded-md overflow-x-auto mb-3 text-xs font-mono whitespace-pre border border-slate-300">{children}</div>,
+                table: ({ children }) => <div className="overflow-x-auto mb-3"><table className="min-w-full text-xs border-2 border-slate-400">{children}</table></div>,
+                thead: ({ children }) => <thead className="bg-slate-100 border-b-2 border-slate-400">{children}</thead>,
+                tbody: ({ children }) => <tbody className="bg-white">{children}</tbody>,
                 tr: ({ children }) => <tr>{children}</tr>,
-                th: ({ children }) => <th className="px-3 py-1.5 text-left font-semibold text-slate-700">{children}</th>,
-                td: ({ children }) => <td className="px-3 py-1.5 text-slate-600">{children}</td>,
+                th: ({ children }) => <th className="px-4 py-2 text-left font-bold text-slate-800 border border-slate-400 bg-slate-100">{children}</th>,
+                td: ({ children }) => <td className="px-4 py-2 text-slate-700 border border-slate-300">{children}</td>,
               }}
             >
               {assignment.instructions || assignment.description}
@@ -87,7 +89,7 @@ export function AssignmentDetailsCard({
               {assignment.testCases.map((testCase, idx) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-lg bg-slate-50/70 border border-slate-200/50"
+                  className="p-3 rounded-lg bg-slate-100 border border-slate-200"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-semibold text-slate-700">
@@ -100,13 +102,13 @@ export function AssignmentDetailsCard({
                   <div className="space-y-1 text-xs">
                     <div>
                       <span className="font-medium text-slate-600">Input:</span>
-                      <code className="ml-2 px-1.5 py-0.5 bg-white rounded font-mono">
+                      <code className="ml-2 px-1.5 py-0.5 bg-white rounded font-mono text-slate-800">
                         {testCase.input}
                       </code>
                     </div>
                     <div>
                       <span className="font-medium text-slate-600">Expected:</span>
-                      <code className="ml-2 px-1.5 py-0.5 bg-white rounded font-mono">
+                      <code className="ml-2 px-1.5 py-0.5 bg-white rounded font-mono text-slate-800">
                         {testCase.expectedOutput}
                       </code>
                     </div>
