@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { assignmentStorage, Assignment } from "@/lib/services/assignment-storage.service";
-import { initializeSampleAssignments } from "@/lib/data/all-sample-assignments";
+import { sampleAssignments } from "@/lib/data/sample-assignments";
 import ReactMarkdown from "react-markdown";
 
 export default function InstructorDashboard() {
@@ -19,7 +19,7 @@ export default function InstructorDashboard() {
 
   useEffect(() => {
     // Auto-load sample assignments on first visit
-    initializeSampleAssignments();
+    assignmentStorage.initializeWithSamples(sampleAssignments);
     loadAssignments();
   }, []);
 
