@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { assignmentStorage, Assignment } from "@/lib/services/assignment-storage.service";
-import { sampleAssignments } from "@/lib/data/sample-assignments";
+import { sampleAssignments } from "@/lib/data/assignments";
 import ReactMarkdown from "react-markdown";
 
 export default function InstructorDashboard() {
@@ -18,7 +18,29 @@ export default function InstructorDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    // Auto-load sample assignments on first visit
+    // Clear old localStorage and auto-load sample assignments on first visit
+    const oldKey = 'autograder_assignments';
+    const storedData = localStorage.getItem(oldKey);
+    if (storedData) {
+      try {
+        const parsed = JSON.parse(storedData);
+        // If old format detected (check for assignments without proper structure), clear it
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const hasOldFormat = parsed.some(a => 
+            !a.tags || 
+            !Array.isArray(a.tags) || 
+            a.difficulty !== undefined
+          );
+          if (hasOldFormat) {
+            localStorage.removeItem(oldKey);
+          }
+        }
+      } catch (e) {
+        // Invalid format, clear it
+        localStorage.removeItem(oldKey);
+      }
+    }
+    
     assignmentStorage.initializeWithSamples(sampleAssignments);
     loadAssignments();
   }, []);

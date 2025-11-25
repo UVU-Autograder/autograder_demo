@@ -73,6 +73,7 @@ export interface Assignment {
   starterCode: string;
   testCases: TestCase[];
   rubric: Rubric;
+  maxScore: number; // Total points for the assignment
   isSample?: boolean; // Flag for sample assignments
   tags?: string[]; // Custom tags for categorization
   // New fields for enhanced functionality
