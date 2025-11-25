@@ -26,10 +26,7 @@ export interface TestCase {
 }
 
 export interface Rubric {
-  correctness: { points: number; description: string };
-  codeQuality: { points: number; description: string };
-  efficiency: { points: number; description: string };
-  edgeCases: { points: number; description: string };
+  [key: string]: { points: number; description: string };
 }
 
 /**

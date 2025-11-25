@@ -18,28 +18,9 @@ export default function InstructorDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    // Clear old localStorage and auto-load sample assignments on first visit
+    // Always clear and reinitialize to ensure latest sample data
     const oldKey = 'autograder_assignments';
-    const storedData = localStorage.getItem(oldKey);
-    if (storedData) {
-      try {
-        const parsed = JSON.parse(storedData);
-        // If old format detected (check for assignments without proper structure), clear it
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const hasOldFormat = parsed.some(a => 
-            !a.tags || 
-            !Array.isArray(a.tags) || 
-            a.difficulty !== undefined
-          );
-          if (hasOldFormat) {
-            localStorage.removeItem(oldKey);
-          }
-        }
-      } catch (e) {
-        // Invalid format, clear it
-        localStorage.removeItem(oldKey);
-      }
-    }
+    localStorage.removeItem(oldKey);
     
     assignmentStorage.initializeWithSamples(sampleAssignments);
     loadAssignments();
