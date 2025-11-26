@@ -104,8 +104,8 @@ export default function ViewAssignmentPage() {
                   <div>
                     <CardTitle className="text-2xl mb-2">{assignment.title}</CardTitle>
                     <div className="flex flex-wrap gap-2">
-                      <Badge className={`${difficultyColors[assignment.difficulty]} border`}>
-                        {assignment.difficulty}
+                      <Badge className={`${difficultyColors[(assignment as any).difficulty as keyof typeof difficultyColors] || difficultyColors.intro} border`}>
+                        {(assignment as any).difficulty || 'N/A'}
                       </Badge>
                       <Badge variant="outline" className="gap-1">
                         <Code2 className="h-3 w-3" />
