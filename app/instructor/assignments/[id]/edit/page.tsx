@@ -43,7 +43,7 @@ export default function EditAssignment() {
         }
         
         setTitle(assignment.title);
-        setDifficulty(assignment.difficulty as 'easy' | 'medium' | 'hard');
+        setDifficulty((assignment as any).difficulty || 'medium');
         setLanguage(assignment.language);
         setDescription(assignment.description);
         setInstructions(assignment.instructions);
@@ -54,7 +54,7 @@ export default function EditAssignment() {
           expectedOutput: tc.expectedOutput,
           isHidden: tc.hidden
         })));
-        setRubric(assignment.rubric);
+        setRubric(assignment.rubric as any);
       } catch (error) {
         toast.error('Failed to load assignment');
         router.push('/instructor');
