@@ -18,18 +18,17 @@ export function AssignmentDetailsCard({
 }: AssignmentDetailsCardProps) {
   return (
     <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl">
-      <CardHeader>
-        <CardTitle className="text-lg">Assignment Details</CardTitle>
+      <CardHeader className="border-b border-slate-200/50">
+        <CardTitle className="text-xl font-bold text-slate-900">{assignment.title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 text-sm">
         {/* Instructions - Full Markdown */}
         <div>
-          <span className="font-semibold text-slate-700 mb-3 block">Assignment Instructions:</span>
           <div className="text-slate-600 prose prose-sm max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
-                h1: ({ children }) => <h1 className="text-xl font-bold mt-4 mb-2 text-slate-900">{children}</h1>,
+                h1: ({ children }) => null, // Skip first H1 as it duplicates the title
                 h2: ({ children }) => <h2 className="text-lg font-bold mt-3 mb-2 text-slate-900">{children}</h2>,
                 h3: ({ children }) => <h3 className="text-base font-semibold mt-2 mb-1 text-slate-800">{children}</h3>,
                 p: ({ children }) => <p className="mb-2 leading-relaxed">{children}</p>,

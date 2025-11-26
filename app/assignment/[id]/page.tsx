@@ -170,11 +170,16 @@ export default function AssignmentPage() {
         {/* Left Panel - Problem Description */}
         <div className="w-1/2 overflow-y-auto border-r bg-white p-6">
           <div className="max-w-2xl">
+            {/* Title Header */}
+            <div className="mb-6 pb-4 border-b border-slate-200">
+              <h1 className="text-3xl font-bold text-slate-900">{assignment.title}</h1>
+            </div>
+
             <div className="prose prose-slate max-w-none mb-8">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  h1: ({ children }) => <h1 className="text-3xl font-bold mt-8 mb-4 text-slate-900">{children}</h1>,
+                  h1: ({ children }) => null, // Skip first H1 as it duplicates the title
                   h2: ({ children }) => <h2 className="text-2xl font-bold mt-6 mb-3 text-slate-900">{children}</h2>,
                   h3: ({ children }) => <h3 className="text-xl font-semibold mt-5 mb-2 text-slate-800">{children}</h3>,
                   p: ({ children }) => <p className="mb-4 leading-relaxed text-slate-700">{children}</p>,

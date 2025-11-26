@@ -150,6 +150,9 @@ export default function ViewAssignmentPage() {
                   <div className="prose prose-sm max-w-none text-slate-600">
                     <ReactMarkdown
                       components={{
+                        h1: ({ children }) => null, // Skip first H1 as it duplicates the title
+                        h2: ({ children }) => <h2 className="text-base font-bold text-slate-900 mt-4 mb-2">{children}</h2>,
+                        h3: ({ children }) => <h3 className="text-sm font-semibold text-slate-800 mt-3 mb-2">{children}</h3>,
                         p: ({ children }) => <p className="mb-3">{children}</p>,
                         ul: ({ children }) => <ul className="list-disc list-inside mb-3 space-y-1">{children}</ul>,
                         ol: ({ children }) => <ol className="list-decimal list-inside mb-3 space-y-1">{children}</ol>,

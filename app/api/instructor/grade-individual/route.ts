@@ -21,7 +21,16 @@ interface AISettings {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { assignmentId, assignment: bodyAssignment, code, settings, testResults } = body;
+    const {
+      assignmentId,
+      assignment: bodyAssignment,
+      assignmentTitle,
+      assignmentDescription,
+      language: bodyLanguage,
+      code,
+      settings,
+      testResults,
+    } = body;
 
     // debug: log incoming request keys so we can see what client actually sends
     console.log('grade-individual request received - keys:', Object.keys(body));
@@ -42,6 +51,19 @@ export async function POST(req: NextRequest) {
       } catch (err) {
         assignment = null;
       }
+    }
+
+    // if still not found, accept minimal inline fields (assignmentTitle/assignmentDescription/language)
+    if (!assignment && assignmentTitle) {
+      assignment = {
+        title: assignmentTitle,
+        description: assignmentDescription || '',
+        language: bodyLanguage || 'python',
+        instructions: assignmentDescription || '',
+        testCases: testResults || [],
+        rubric: { correctness: { points: 100, description: 'Auto fallback' } },
+        maxScore: 100,
+      } as any;
     }
 
     if (!assignment) {
@@ -65,10 +87,18 @@ export async function POST(req: NextRequest) {
     const feedback = parseAIResponse(aiResponse, assignment);
 
     return NextResponse.json(feedback);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error generating individual feedback:', error);
+
+    // Return specific error messages for better UX
+    const errorMessage = error.message || 'Failed to generate feedback';
     return NextResponse.json(
-      { error: 'Failed to generate feedback' },
+      {
+        error: errorMessage,
+        details: error.message?.includes('credits')
+          ? 'Please add credits to your OpenRouter account at https://openrouter.ai/settings/credits'
+          : undefined
+      },
       { status: 500 }
     );
   }

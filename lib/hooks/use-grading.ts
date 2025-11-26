@@ -89,7 +89,10 @@ export function useGrading({ assignment, code }: UseGradingProps) {
       const data = await response.json();
 
       if (data.error) {
-        toast.error(data.error);
+        const errorMsg = data.details
+          ? `${data.error}\n${data.details}`
+          : data.error;
+        toast.error(errorMsg, { duration: 8000 });
         return;
       }
 

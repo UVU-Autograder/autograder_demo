@@ -44,8 +44,15 @@ export interface AIFeedback {
   };
 }
 
+// Popular Free Models on OpenRouter:
+// - deepseek/deepseek-chat:free (Best for code, 671B params)
+// - google/gemini-flash-1.5:free (Fast, good quality)
+// - meta-llama/llama-3.1-8b-instruct:free (Llama 3.1)
+// - qwen/qwen-2-7b-instruct:free (Qwen 2)
+// - microsoft/phi-3-mini-128k-instruct:free (Small, fast)
+
 export const DEFAULT_AI_SETTINGS: AISettings = {
-  model: "anthropic/claude-3.5-sonnet", // Default to Claude 3.5 Sonnet
+  model: "deepseek/deepseek-chat:free", // Free model - or use env var
   feedbackLength: "medium",
   feedbackStyle: "technical",
   outputFormat: "mixed",

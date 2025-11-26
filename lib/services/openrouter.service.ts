@@ -169,7 +169,10 @@ Return your evaluation in the following JSON format:
     model?: string
   ): Promise<string> {
     const selectedModel = model || this.model;
-    
+
+    console.log('Using model:', selectedModel);
+    console.log('API Key present:', !!this.apiKey);
+
     try {
       const response = await axios.post(
         'https://openrouter.ai/api/v1/chat/completions',
@@ -198,8 +201,26 @@ Return your evaluation in the following JSON format:
       );
 
       return response.data.choices[0].message.content;
-    } catch (error) {
+    } catch (error: any) {
       console.error('OpenRouter API error:', error);
+
+      // Better error messages
+      if (error.response) {
+        const status = error.response.status;
+        const data = error.response.data;
+
+        console.error('Response status:', status);
+        console.error('Response data:', data);
+
+        if (status === 404) {
+          throw new Error(`Invalid model: "${selectedModel}". Please check OpenRouter documentation for valid model names.`);
+        } else if (status === 402) {
+          throw new Error('Insufficient credits. Please add credits to your OpenRouter account.');
+        } else if (status === 401) {
+          throw new Error('Invalid API key. Please check your OPENROUTER_API_KEY environment variable.');
+        }
+      }
+
       throw error;
     }
   }

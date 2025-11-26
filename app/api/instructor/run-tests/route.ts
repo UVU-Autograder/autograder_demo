@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { codeExecutionService } from '@/lib/services/code-execution.service';
+import { codeWrapperService } from '@/lib/services/code-wrapper.service';
 
 interface TestCase {
   input: string;
@@ -31,10 +32,13 @@ export async function POST(req: NextRequest) {
     // Execute code against each test case
     for (let i = 0; i < testCases.length; i++) {
       const testCase = testCases[i];
-      
+
       try {
+        // Wrap student code with test driver (LeetCode-style)
+        const wrappedCode = codeWrapperService.wrapCode(code, language, testCase);
+
         const result = await codeExecutionService.executeCode({
-          source_code: code,
+          source_code: wrappedCode,
           language_id: languageId,
           stdin: testCase.input,
           expected_output: testCase.expectedOutput,

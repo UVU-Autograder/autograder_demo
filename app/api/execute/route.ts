@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAssignmentById } from '@/lib/assignments';
 import { codeExecutionService } from '@/lib/services/code-execution.factory';
+import { codeWrapperService } from '@/lib/services/code-wrapper.service';
 import type { TestResult } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
@@ -20,8 +21,11 @@ export async function POST(request: NextRequest) {
 
     for (const testCase of visibleTests) {
       try {
+        // Wrap student code with test driver (LeetCode-style)
+        const wrappedCode = codeWrapperService.wrapCode(code, assignment.language, testCase);
+
         const result = await codeExecutionService.executeCode({
-          source_code: code,
+          source_code: wrappedCode,
           language_id: languageId,
           stdin: testCase.input,
           expected_output: testCase.expectedOutput,
