@@ -105,10 +105,10 @@ export default function GradeIndividualPage() {
               <div>
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl font-bold text-slate-800">{assignment.title}</h1>
-                  <Badge className={DIFFICULTY_COLORS[assignment.difficulty]}>
-                    {assignment.difficulty === "intro"
+                  <Badge className={DIFFICULTY_COLORS[(assignment as any).difficulty as keyof typeof DIFFICULTY_COLORS] || "bg-blue-100 text-blue-700 border-blue-300"}>
+                    {(assignment as any).difficulty === "intro"
                       ? "Intro Level"
-                      : assignment.difficulty === "intermediate"
+                      : (assignment as any).difficulty === "intermediate"
                       ? "Intermediate"
                       : "Advanced"}
                   </Badge>
