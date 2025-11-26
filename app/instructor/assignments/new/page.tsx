@@ -86,7 +86,6 @@ export default function NewAssignment() {
       const assignment = assignmentStorage.create({
         title: title.trim(),
         description: description.trim(),
-        difficulty,
         language,
         instructions: instructions.trim(),
         starterCode: starterCode.trim() || undefined,
@@ -94,7 +93,7 @@ export default function NewAssignment() {
         rubric,
         codeRequirements,
         maxScore,
-      });
+      } as any);
 
       toast.success(`Assignment "${assignment.title}" created successfully!`);
       
