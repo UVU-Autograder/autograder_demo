@@ -4,20 +4,16 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Save, Eye, Trash2, Plus, Sparkles } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Trash2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { SUPPORTED_LANGUAGES, DEFAULT_RUBRIC } from '@/lib/constants';
-import type { Assignment, TestCase } from '@/lib/types';
+import type { TestCase } from '@/lib/types';
 import { assignmentStorage } from '@/lib/services/assignment-storage.service';
+import { CodeEditor } from '@/components/code-editor';
 
 export default function EditAssignment() {
   const router = useRouter();
@@ -215,7 +211,7 @@ export default function EditAssignment() {
       {/* Form */}
       <main className="container mx-auto px-6 py-8 max-w-5xl">
         <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-white/70 backdrop-blur-sm">
+          <TabsList className="grid w-full max-w-3xl grid-cols-3">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="code">Code & Instructions</TabsTrigger>
             <TabsTrigger value="testing">Test Cases & Rubric</TabsTrigger>
@@ -228,65 +224,66 @@ export default function EditAssignment() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-blue-600" />
+              <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+                <CardHeader className="border-b border-slate-100">
+                  <CardTitle className="flex items-center gap-2 text-slate-800">
+                    <div className="h-2 w-2 rounded-full bg-blue-500"></div>
                     Basic Information
                   </CardTitle>
                   <CardDescription>Core details about the assignment</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="title" className="text-sm font-medium">Assignment Title *</Label>
-                    <Input
+                    <label className="text-sm font-semibold text-slate-700">Assignment Title *</label>
+                    <input
                       id="title"
+                      type="text"
                       placeholder="e.g., Two Sum, Binary Search"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="bg-white/50"
+                      className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="difficulty" className="text-sm font-medium">Difficulty *</Label>
-                      <Select value={difficulty} onValueChange={(v: any) => setDifficulty(v)}>
-                        <SelectTrigger id="difficulty" className="bg-white/50">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="easy">Easy</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="hard">Hard</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <label className="text-sm font-semibold text-slate-700">Difficulty *</label>
+                      <select
+                        id="difficulty"
+                        value={difficulty}
+                        onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
+                        className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      >
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                      </select>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="language" className="text-sm font-medium">Programming Language *</Label>
-                      <Select value={language} onValueChange={setLanguage}>
-                        <SelectTrigger id="language" className="bg-white/50">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Object.entries(SUPPORTED_LANGUAGES).map(([key, lang]) => (
-                            <SelectItem key={key} value={key}>{lang.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <label className="text-sm font-semibold text-slate-700">Programming Language *</label>
+                      <select
+                        id="language"
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                        className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      >
+                        {Object.entries(SUPPORTED_LANGUAGES).map(([key, lang]) => (
+                          <option key={key} value={key}>{lang.name}</option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="description" className="text-sm font-medium">Description *</Label>
-                    <Textarea
+                    <label className="text-sm font-semibold text-slate-700">Description *</label>
+                    <textarea
                       id="description"
                       placeholder="Describe the problem students need to solve..."
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       rows={4}
-                      className="bg-white/50"
+                      className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
                     />
                   </div>
                 </CardContent>
@@ -301,37 +298,36 @@ export default function EditAssignment() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl">
-                <CardHeader>
-                  <CardTitle>Instructions</CardTitle>
+              <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+                <CardHeader className="border-b border-slate-100">
+                  <CardTitle className="flex items-center gap-2 text-slate-800">
+                    <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                    Instructions
+                  </CardTitle>
                   <CardDescription>Detailed implementation guidance</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="instructions" className="text-sm font-medium">Implementation Instructions *</Label>
-                    <Textarea
+                    <label className="text-sm font-semibold text-slate-700">Implementation Instructions *</label>
+                    <textarea
                       id="instructions"
                       placeholder="Explain what function/method students should implement..."
                       value={instructions}
                       onChange={(e) => setInstructions(e.target.value)}
-                      rows={5}
-                      className="bg-white/50"
+                      rows={10}
+                      className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all resize-none font-mono text-sm"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="starter-code" className="text-sm font-medium">Starter Code (Optional)</Label>
-                    <Textarea
-                      id="starter-code"
-                      placeholder="def function_name():\n    # Your code here\n    pass"
+                    <label className="text-sm font-semibold text-slate-700">Starter Code (Optional)</label>
+                    <CodeEditor
                       value={starterCode}
-                      onChange={(e) => setStarterCode(e.target.value)}
-                      rows={10}
-                      className="font-mono text-sm bg-slate-900 text-slate-100 placeholder:text-slate-500"
+                      onChange={setStarterCode}
+                      language={language}
+                      height="300px"
+                      placeholder={`# Starter code for ${language}\n# Students will build upon this template\n\ndef solution():\n    # TODO: Implement your solution here\n    pass`}
                     />
-                    <p className="text-xs text-slate-600">
-                      Provide a template or function signature for students to start with
-                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -340,17 +336,20 @@ export default function EditAssignment() {
 
           {/* Test Cases Tab */}
           <TabsContent value="testing" className="space-y-6">
-            <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl">
-              <CardHeader>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+              <CardHeader className="border-b border-slate-100">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>Test Cases</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-slate-800">
+                      <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+                      Test Cases
+                    </CardTitle>
                     <CardDescription>Define inputs and expected outputs</CardDescription>
                   </div>
                   <Button
                     size="sm"
                     onClick={addTestCase}
-                    className="gap-2 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-md shadow-blue-500/30"
                   >
                     <Plus className="h-4 w-4" />
                     Add Test Case
@@ -365,59 +364,61 @@ export default function EditAssignment() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.05 }}
                   >
-                    <Card className="bg-linear-to-br from-slate-50 to-blue-50/30 border-slate-200/60">
+                    <Card className="bg-gradient-to-br from-white/80 to-slate-50/80 border-slate-200/60">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="font-mono">Test {index + 1}</Badge>
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white text-sm font-bold shadow-md">
+                              {index + 1}
+                            </div>
+                            <span className="font-semibold text-slate-800">Test Case {index + 1}</span>
                             {testCase.isHidden && (
-                              <Badge variant="secondary" className="text-xs">Hidden</Badge>
+                              <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">Hidden</span>
                             )}
                           </div>
                           <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              <Label htmlFor={`hidden-${testCase.id}`} className="text-xs text-slate-600">
-                                Hidden
-                              </Label>
-                              <Switch
-                                id={`hidden-${testCase.id}`}
+                            <label className="flex items-center gap-2 text-sm text-slate-700">
+                              <input
+                                type="checkbox"
                                 checked={testCase.isHidden}
-                                onCheckedChange={(checked) => updateTestCase(testCase.id, 'isHidden', checked)}
+                                onChange={(e) => updateTestCase(testCase.id, 'isHidden', e.target.checked)}
+                                className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                               />
-                            </div>
+                              <span className="font-medium">Hidden</span>
+                            </label>
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => removeTestCase(testCase.id)}
                               disabled={testCases.length === 1}
-                              className="h-8 w-8 p-0"
+                              className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
                             >
-                              <Trash2 className="h-4 w-4 text-red-600" />
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-3">
                         <div className="space-y-2">
-                          <Label htmlFor={`input-${testCase.id}`} className="text-xs font-medium">Input</Label>
-                          <Textarea
+                          <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Input</label>
+                          <textarea
                             id={`input-${testCase.id}`}
                             placeholder="Input for this test case..."
                             value={testCase.input}
                             onChange={(e) => updateTestCase(testCase.id, 'input', e.target.value)}
                             rows={2}
-                            className="font-mono text-xs bg-white/70"
+                            className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white/80 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none font-mono text-sm"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor={`output-${testCase.id}`} className="text-xs font-medium">Expected Output</Label>
-                          <Textarea
+                          <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Expected Output</label>
+                          <textarea
                             id={`output-${testCase.id}`}
                             placeholder="Expected output for this test case..."
                             value={testCase.expectedOutput}
                             onChange={(e) => updateTestCase(testCase.id, 'expectedOutput', e.target.value)}
                             rows={2}
-                            className="font-mono text-xs bg-white/70"
+                            className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white/80 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none font-mono text-sm"
                           />
                         </div>
                       </CardContent>
@@ -428,16 +429,26 @@ export default function EditAssignment() {
             </Card>
 
             {/* Rubric */}
-            <Card className="border-slate-200/60 bg-white/70 backdrop-blur-xl shadow-xl">
-              <CardHeader>
-                <CardTitle>Grading Rubric</CardTitle>
-                <CardDescription>Configure point distribution for evaluation</CardDescription>
+            <Card className="border-slate-200/60 bg-white/70 backdrop-blur shadow-xl shadow-slate-200/50">
+              <CardHeader className="border-b border-slate-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2 text-slate-800">
+                      <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                      Grading Rubric
+                    </CardTitle>
+                    <CardDescription>Configure point distribution for evaluation</CardDescription>
+                  </div>
+                  <Badge className="text-base px-4 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md">
+                    Total: {Object.values(rubric).reduce((sum, r) => sum + r.points, 0)} points
+                  </Badge>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-4">
                 {Object.entries(rubric).map(([key, value]) => (
                   <div
                     key={key}
-                    className="flex items-center justify-between p-4 bg-linear-to-r from-slate-50 to-blue-50/30 rounded-lg border border-slate-200/50"
+                    className="flex items-center justify-between p-4 bg-gradient-to-r from-white/80 to-slate-50/60 rounded-lg border border-slate-200/50 hover:shadow-md transition-all"
                   >
                     <div className="flex-1">
                       <p className="font-semibold text-slate-800 capitalize">
@@ -445,28 +456,22 @@ export default function EditAssignment() {
                       </p>
                       <p className="text-sm text-slate-600">{value.description}</p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Input
+                    <div className="flex items-center gap-3">
+                      <input
                         type="number"
-                        className="w-20 text-center font-semibold bg-white/70"
+                        className="w-20 px-3 py-2 rounded-lg border border-slate-200 bg-white/80 backdrop-blur focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-center font-semibold"
                         value={value.points}
+                        min="0"
+                        max="100"
                         onChange={(e) => setRubric({
                           ...rubric,
                           [key]: { ...value, points: parseInt(e.target.value) || 0 }
                         })}
                       />
-                      <span className="text-sm text-slate-600">pts</span>
+                      <span className="text-sm font-medium text-slate-600">pts</span>
                     </div>
                   </div>
                 ))}
-                <div className="pt-4 border-t border-slate-200">
-                  <div className="flex items-center justify-between p-4 bg-linear-to-r from-blue-600 to-purple-600 rounded-lg text-white">
-                    <span className="font-semibold text-lg">Total Points</span>
-                    <span className="text-2xl font-bold">
-                      {Object.values(rubric).reduce((sum, r) => sum + r.points, 0)}
-                    </span>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </TabsContent>
