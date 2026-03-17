@@ -4,12 +4,12 @@ AI-powered code autograder prototype for UVU Computer Science Department. This d
 
 ## Features
 
-- 🎯 **LeetCode-Style Interface**: Split-pane code editor with Monaco
-- ⚡ **Real-Time Execution**: Run code against test cases instantly
-- 🤖 **AI-Powered Feedback**: Detailed evaluation using OpenRouter API
-- 📊 **Rubric-Based Grading**: Comprehensive scoring across multiple criteria
-- 📁 **Bulk Grading**: Upload CSV files to grade multiple submissions
-- 🔒 **Secure Execution**: Sandboxed code execution with Judge0
+- **LeetCode-Style Interface**: Split-pane code editor with Monaco
+- **Real-Time Execution**: Run code against test cases instantly
+- **AI-Powered Feedback**: Detailed evaluation using OpenRouter API
+- **Rubric-Based Grading**: Comprehensive scoring across multiple criteria
+- **Bulk Grading**: Upload CSV files to grade multiple submissions
+- **Secure Execution**: Sandboxed code execution with Judge0
 
 ## Tech Stack
 
